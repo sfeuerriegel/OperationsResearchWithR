@@ -2,3 +2,12 @@
 /Exercises/*.txt
 /Exercises/*.aux
 /Exercises/*.log
+/Lecture/Slides/*.txt
+/Lecture/Slides/*.vrb
+/Lecture/Slides/*.log
+/Lecture/Slides/*.nav
+/Lecture/Slides/*.snm
+/Lecture/Slides/*.toc
+/Lecture/Slides/*.aux
+/Lecture/Slides/*.out
+/Exercises/*.tps
