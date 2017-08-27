@@ -1,0 +1,298 @@
+\input{../information}
+
+\documentclass[a4paper,9pt]{scrartcl}
+
+\usepackage[latin1]{inputenc}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{collcell}
+
+\usepackage{textcomp}
+\usepackage{url}
+
+%% ==== Fonts  (Sans + Serif) =======================
+ 
+%% - Stefans Style 
+  % load sans-serif font
+\usepackage{lmodern}
+  % font in math mode
+\usepackage{mathptmx}
+  % default font: charter
+\usepackage{charter}\linespread{1.05} 
+  % switch sans-serif to lmodern
+\renewcommand{\sfdefault}{lmss}
+
+% Fix: mathptmx has no support for bold math
+%http://www.foonews.info/de-comp-text-tex/2435035-re-fette-caligraphische-buchstaben-mit-bm-mathcal-n.html
+  \renewcommand\boldmath{\mathversion{bold}}
+
+  \SetSymbolFont{operators}   {bold}  {OT1}{lmr} {bx}{n}
+  \SetSymbolFont{letters}     {bold}  {OML}{lmm} {b}{it}
+  \SetSymbolFont{symbols}     {bold}  {OMS}{lmsy}{b}{n}
+  \SetSymbolFont{largesymbols}{bold}  {OMX}{lmex}{m}{n}
+
+\setkomafont{title}{\normalfont\sffamily}
+
+\usepackage{bm}
+
+\usepackage{xcolor}
+    \definecolor{BottomBoxColor}{rgb}{0,0,0}
+    \definecolor{HiddenContentColor}{rgb}{0.5,0.5,0.5}
+    \definecolor{MarginNoteColor}{rgb}{0,0,0.8}
+    \definecolor{ListingsKeywordColor}{rgb}{0,0,0.4}
+    \definecolor{ListingsIdentifierColor}{rgb}{0,0.5,0}
+    \definecolor{ListingsCommentColor}{rgb}{0.4,0.4,0.4}
+    \definecolor{ListingsStringColor}{rgb}{0.6000,0.3333,0.7333}%{0.8,0,0}
+    \definecolor{ListingsRuleSepColor}{rgb}{0,0,0}
+    \definecolor{ListingsEmphColor}{rgb}{0,0.6667,0.6667}
+    \definecolor{ListingsBreakSymbolColor}{rgb}{0.780,0.082,0.522}
+    \definecolor{SectionColor}{rgb}{0,0,0}
+    \definecolor{MathsCancelColor}{rgb}{0.5,0.5,0.5}
+    \definecolor{AnnotationColor}{rgb}{0,0,0}
+    \definecolor{TableColor}{gray}{0.85}
+
+\usepackage{colortbl}
+
+%% Listings Paket ------------------------------------------------------
+\usepackage{listings}
+  \lstset{%
+    basicstyle=\ttfamily,
+    tabsize=3,
+    showtabs=false,
+    showspaces=false,
+    showstringspaces=false,
+    tab=\rightarrowfill,
+    keywordstyle=\color{ListingsKeywordColor},
+    identifierstyle=\color{ListingsIdentifierColor},
+    commentstyle=\color{ListingsCommentColor},
+    stringstyle=\color{ListingsStringColor},
+    emphstyle=\color{ListingsEmphColor}\bfseries,
+    breaklines=true,
+    breakatwhitespace=true,
+    prebreak=\mbox{\,$\color{ListingsBreakSymbolColor}\mathbf{\hookleftarrow}$},
+%% http://tex.stackexchange.com/questions/18452/use-in-lstlisting
+    mathescape=false,
+}
+  \lstloadlanguages{
+           R
+  }
+  \lstset{
+    language=R,
+    morekeywords={%
+      head,str,%
+      pie,%
+      bptest,acf,filter,dwtest,vif,AIC,BIC,logLik,%
+      knn,rpart,printcp,plotcp,prune,kmeans,svm,roc,nnet,party,%
+      Corpus,inspect,stopwords,TermDocumentMatrix,findFreqTerms,findAssocs,removeSparseTerms,wordcloud,
+      stripWhitespace,tolower,removeNumbers,removePunctuation,removeWords,stemDocument,
+			trans3d,ggplot,
+			digitsBase,strtoi,ginv,det,optimHess,taylor,polyval,
+			lp,solve.QP,optimx
+    },
+    otherkeywords={cor.test,tm_map,tm_filter,PlainTextDocument,is.positive.definite},
+    deletekeywords={by,start,end,model,matrix,formula,class,data,weights,body},
+    emph={TRUE,FALSE},
+    extendedchars=true,
+    alsoletter={\%},
+    alsoother={.:_\$~},
+  }
+
+\textheight22.0cm \textwidth16.0cm \topmargin0.00cm
+\oddsidemargin0.00cm \footskip0.00cm
+
+\parindent0cm
+
+\pagestyle{fancy} \fancyhf{} \fancyhead[OL]{
+    \begin{tabular}[b]{l}
+       \thistopic\\
+    \end{tabular}
+}
+
+
+\fancyhead[OR]{
+    \begin{tabular}[b]{r}
+       \thisdate\\
+    \end{tabular}
+}
+
+% http://tex.stackexchange.com/questions/31200/scrartcl-remove-page-number-on-title-page
+\renewcommand*{\titlepagestyle}{empty}
+
+\title{R Reference Card}
+%\author{\normalsize Business Intelligence}
+\author{\normalsize}
+%\date{\normalsize\today}
+\date{\normalsize}
+
+\begin{document}
+\pagestyle{empty}
+\maketitle
+\vspace*{-1cm}
+
+This table provides a short overview of (most) R commands presented during the exercise sessions. More information on both the commands and their arguments can be retrieved from the R help pages. These are accessed via \lstinline|?command| or \lstinline|help(command)|. If you the corresponding package is not loaded, use instead \lstinline|??command|. A more comprehensive overview is offered by the R reference card, found at\\
+\url{http://cran.r-project.org/doc/contrib/Short-refcard.pdf}.
+
+\newcommand{\columnaslst}[1]{\lstinline{#1}}
+
+\begin{longtable}{|>{\raggedright\arraybackslash\collectcell\columnaslst}p{2.5cm}<{\endcollectcell}%
+|>{\raggedright\arraybackslash\collectcell\columnaslst}p{6.0cm}<{\endcollectcell}|%
+>{\raggedright\arraybackslash}p{6.7cm}|}
+\hline
+\multicolumn{1}{|l|}{\textbf{Command}} & \multicolumn{1}{l|}{\textbf{Syntax/Example}} & \textbf{Description} \\ \hline
+%
+\multicolumn{3}{|c|}{\cellcolor{TableColor}\textbf{Basic Operations}} \\ \hline
+%
+library & library(x) & Loads a package with additional functions \\
+setwd & setwd("path") & Changes working directory to a path \\
+c & c(x, y) & Concatenate objects to a vector \\
+seq & seq(from=start, to=end, by=steps) & Generates a sequence with defined steps \\
+: & start:end & Sequence from start to end, possibly descending \\
+length & length(x) & Length of a vector \\
+sum & sum(x) & Sum of all values in $\bm{x}$ \\
+min, max & min(x), max(x) & Minimum/maximum of vector $\bm{x}$ \\
+mean & mean(x) & Average value of vector $\bm{x}$ \\
+sqrt & sqrt(x) & Square root of $x$ \\
+round & round(x, digits=0) & Rounds $x$ to the chosen number of significant digits \\
+log10 & log10(x) & Logarithm to base $10$ \\
+sin, cos, tan & sin(x), cos(x), tan(x) & Sine/cosine/tangent of $x$ \\
+abs & abs(x) & Absolute value of $x$ \\
+rep & rep(x, times=n) & Replicates number/vector $n$ times \\
+" & "text" & Denote a string (i.\,e. a sequence of characters) \\%
+TRUE, FALSE & TRUE, FALSE & Literals denoting boolean values \\%
+\hline
+\multicolumn{3}{|c|}{\cellcolor{TableColor}\textbf{Data Collection}} \\ \hline
+%
+names & names(DataFrame) & Column names of a data frame \\
+colnames & colnames(DataFrame) & Column names of a data frame \\
+head & head(DataFrame) & Shows the first $6$ rows of a data frame \\
+$ & DataFrame$Columnname & Accessing specific columns of a data frame \\
+%attach, detach & attach(DataFrame) & Attaches the data frame, makes accessing easier \\
+cbind, rbind & cbind(x), rbind(x) & Binding vectors column-wise or row-wise to form matrix \\
+as.data.frame & as.data.frame(x) & Coerces an object to a data frame \\
+%as.factor & as.factor(x) & Coerces an object as factors \\
+read.csv & read.csv("file.csv", sep=",", header=TRUE) & Reading a csv file as specified \\
+read.csv & read.csv(file.choose(), sep=",", header=TRUE) & Reading a csv file according to manual selection \\
+str & str(x) & Gives the structure of an object \\
+dim & dim(x) & Dimensions of a data frame $x$ \\
+ncol, nrow & ncol(DataFrame), nrow(DataFrame) & Number of columns/rows in data frame or matrix \\
+numeric & numeric(n) & Create vector of length $n$ filled with zeros \\
+attributes & attributes(x) & Access an objects attributes \\
+%
+\hline
+\multicolumn{3}{|c|}{\cellcolor{TableColor}\textbf{Indexing}} \\ \hline
+%
+[] & x[n] & $n$-th element of vector $\bm{x}$ \\
+\multicolumn{1}{|l|}{} & x[-n] & Vector $\bm{x}$ without the $n$-th element \\
+\multicolumn{1}{|l|}{} & x[1:n] & Elements $1$ to $n$ from vector $\bm{x}$ \\
+\multicolumn{1}{|l|}{} & x[c(1,3,4)] & First, third and fourth element of vector $x$ \\
+\multicolumn{1}{|l|}{} & x[x>3] & Selects elements fulfilling condition, i.\,e. greater than $3$ \\
+\multicolumn{1}{|l|}{} & mat[i,j] & Matrix element in $i$-th row and $j$-th column \\
+\multicolumn{1}{|l|}{} & mat[,j] & $j$-th column of matrix \\
+\multicolumn{1}{|l|}{} & DataFrame[["Columnname"]] & Accessing specific columns of a data frame \\
+which & which(x>3) & Indices of element fulfilling condition \\
+which.min & which(d) & Index of element with minimum value \\
+%
+\hline
+\multicolumn{3}{|c|}{\cellcolor{TableColor}\textbf{Visualization}} \\ \hline
+%
+%barplot & barplot(x) & Barplot, absolute frequencies \\
+%pie & pie(x) & Draws a pie chart \\
+%hist & hist(x) & Frequency histogram with fixed ranges \\
+%\multicolumn{1}{|l|}{} & hist(x, freq=FALSE, breaks=b) & Density histogram with variable ranges \\
+plot & plot(x,y) & Two-dimensional point plot \\
+\multicolumn{1}{|l|}{} & plot(x, y, type='l') & Two-dimensional line \\ points & points(x, y, shape, color) & Adding points to existing plot \\
+text & text(x, y, data, position) & Adding text to points  \\
+%boxplot & boxplot(x) & Produces box and whisker plots \\
+%lines & lines(x) & Connecting points of a plot \\
+%qqnorm & qqnorm(x) & Gives a quantile-quantile plot of the data \\
+%qqline & qqline(x) & Adds a qq line of a normal distribution \\
+%abline & abline(a=intercept, b=slope) & Adds a straight line to a plot \\
+%window & window(x, start=start, end=end) & Defines a time window from start to end \\
+outer & outer(x, y, f) & Evaluating $f$ for all combinations of $\bm{x}$ and $\bm{y}$ \\
+persp & persp(x, y, z) & Surface in 3D \\
+\multicolumn{1}{|l|}{} & persp(x, y, z, theta, phi) & 3D plot with left/right ($\theta$) and up/down ($\phi$) viewing angle \\
+image & image(x, y, z) & Image colored according to $z$ value \\
+contour & contour(x, y, z, add=TRUE) & Adding contour lines to existing plot \\
+trans3d & trans3d(x, y, z, pmat=res) & Adding data points to an existing 3D plot \\
+ggplot & gplot(...) & Fancy graphics with additional options \\
+%
+\hline
+\multicolumn{3}{|c|}{\cellcolor{TableColor}\textbf{Control Flow}} \\ \hline
+%
+function & function() \{ body \} & Self-defined function \\
+return & return(value) & Returning a value from within a function \\
+print & print(text) & Printing text to the screen from within a function \\
+expression & expression(...) & Creating a symbolic expression for later evaluation \\
+eval & eval(f) & Evaluating an expression $f$ with global varialbes \\
+\multicolumn{1}{|l|}{} & eval(f, list) & Evaluating an expression $f$ with a given list of variables \\
+if, else & if, else & Conditional statements \\
+ifelse & ifelse(cond, expr1, expr2) & Executing statements depending on a condition \\
+for & for (i in D) \{ body \} & Loop iterating over a fixed vector of values \\
+while & while (cond) \{ body \} & Executing a loop body while a condition is fulfilled \\
+proc.time & proc.time() & Stopwatch for measuring duration \\
+system.time & system.time(expr) & Measuring execution time of an expression \\
+%
+\hline
+\multicolumn{3}{|c|}{\cellcolor{TableColor}\textbf{Linear Algebra \& Numerical Analysis}} \\ 
+\hline
+%
+digitsBase & digitsBase(num, base=b) & Converting number from base 10 to another base $b$ \\
+strtoi & strtoi(num, base=b) & Converting a number from any base $b$ to base 10 \\
+\%*\% & a \%*\% b & Dot product, matrix multiplication \\
+drop & drop(A) & Deleteing dimensions in $A$ with only one value \\
+t & t(A) & Transpose a matrix $A$ \\
+diag & diag(n) & Identity matrix of size $n \times n$ \\
+solve & solve(A) & Inverse of a matrix square $A$ if existent \\
+ginv & ginv(A) & Pseudoinverse of a non-square matrix $A$ \\
+det & det(A) & Determinant of $A$ if existent \\
+eigen & eigen(A) & Eigenvalues and eigenvectors of a matrix \\
+is.positive.definite & is.positive.definite(A) & Tests if matrix $A$ is positive definite \\
+D & D(f, x) & Derivative of a function $f$ regarding $x$ \\
+optimHess & optimHess(x, f, control) & Approximating Hessian matrix of $f$ at $x$ \\
+taylor & taylor(f, x0, n) & Order $n$ Taylor approximation of $f$ at $x_0$\\
+polyval & polyval(p, x) & Evaluating a Taylor polynomial at $x$ \\
+%
+\hline
+\multicolumn{3}{|c|}{\cellcolor{TableColor}\textbf{Optimization}} \\ \hline
+lp & lp(direction="min", objective.in, const.mat, const.dir, const.rhs, int.vec) & Optimize linear function\\
+solve.QP & solve.QP(Dmat, dvec, Amat, bvec, meq=0) & Minimize quadratic function $-\bm{d}^T \bm{b} + \frac{1}{2} \bm{b}^T D \bm{b}$ with constraints $A^T \bm{b} >= \bm{b}_0$ \\
+optimize & optimize(f=fn, interval=c(a,b), ...,  maximum=FALSE, tol=0.0001)& Minimize one-dimensional, non-linear function $fn$ on interval $[a,b]$ with certain tolerance\\
+optimx & optimx(par, fn, ..., method=c("Nelder-Mead","BFGS"), ..., control=list(), ...)& Optimize multi-dimensional, non-linear function $fn$\\
+
+
+
+\multicolumn{3}{|c|}{\cellcolor{TableColor}\textbf{Necessary Packages}} \\ \hline
+%
+\multicolumn{1}{|l|}{car} & library(car) & Datasets and companion to applied regression \\
+\multicolumn{1}{|l|}{ggplot2} & library(ggplot2) & Fancy plots \\
+\multicolumn{1}{|l|}{sfsmisc} & library(sfsmisc) & Base conversions \\
+\multicolumn{1}{|l|}{MASS} & library(MASS) & Pseudoinverse and datasets \\
+\multicolumn{1}{|l|}{matrixcalc} & library(matrixcalc) & Tests for definiteness of matrices \\
+\multicolumn{1}{|l|}{pracma} & library(pracma) & Taylor approximations \\
+\multicolumn{1}{|l|}{lpSolve} & library(lpSolve) & Linear programming \\
+\multicolumn{1}{|l|}{quadprog} & library(quadprog) & Quadratic programming \\
+\multicolumn{1}{|l|}{optimx} & library(optimx) & Various algorithms for multi-dimensional, non-linear optimization \\
+%\multicolumn{1}{|l|}{car} & library(car) & Companion to applied regression \\
+%\multicolumn{1}{|l|}{caret} & library(caret) & Machine learning interfaces (including datasets) \\
+%\multicolumn{1}{|l|}{class} & library(class) & Functions for classification \\
+%\multicolumn{1}{|l|}{e1071} & library(e1071) & Needed for support vector machine \\
+%\multicolumn{1}{|l|}{ggplot2} & library(ggplot2) & Fancy plots \\
+%\multicolumn{1}{|l|}{ISLR} & library(ISLR) & Needed for support vector regression \\ 
+%\multicolumn{1}{|l|}{lmtest} & library(lmtest) & Testing linear regression models \\
+%\multicolumn{1}{|l|}{MASS} & library(MASS) & Datasets \\
+%\multicolumn{1}{|l|}{nnet} & library(nnet) & Training neural networks \\ 
+%\multicolumn{1}{|l|}{party} & library(party) & Recursive partitioning \\ 
+%\multicolumn{1}{|l|}{partykit} & library(partykit) & Recursive partitioning \\ 
+%\multicolumn{1}{|l|}{rpart} & library(rpart) & Recursive partitioning and regression trees \\
+%\multicolumn{1}{|l|}{pROC} & library(pROC) & ROC Curve \\ 
+%\multicolumn{1}{|l|}{tm} & library(tm) & Text mining \\
+%\multicolumn{1}{|l|}{wordcloud} & library(wordcloud) & Wordclouds \\ 
+\hline
+\end{longtable}%
+
+\end{document}
