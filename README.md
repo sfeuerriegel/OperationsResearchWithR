@@ -1,4 +1,4 @@
-# OperationsResearchWithR
+# Operations Research With R
 ## Teaching materials for a course on operations research with R
 
 *Author: Stefan Feuerriegel, ETH Zurich*
@@ -34,3 +34,7 @@ For lectures, we also provide all questions used in the slides as a [raw file](L
 **Misc**
 
 * [Reference Card with R](ReferenceCard/R_Reference_Card.pdf) 
+
+## Acknowledgments
+
+This course wouldn't have been possible without the intensive help by many of my collaborators, including Julius Gordon and Joscha Märkle-Huß.
