@@ -1,3 +1,42 @@
+%% ------------------------------------------------------
+%% Formatting
+%% ------------------------------------------------------
+
+% Font size in tables
+\newcommand{\tablefontsize}{ \footnotesize}
+\newcommand{\tableheadfontsize}{\footnotesize}
+
+% Layout of table: alignment, font, line spacing
+\newcommand\tablestylecommon{%
+  \renewcommand{\arraystretch}{1.4} % Larger space between rows
+  \normalfont\normalsize    
+  \sffamily\tablefontsize   
+  \centering%                       
+}
+
+\newcommand{\tablestyle}{
+  \tablestylecommon
+  %\tablealtcolored
+}
+
+% Backup of old settings to restore them
+\newcommand\tablerestoresettings{%
+  \renewcommand{\arraystretch}{1}% 
+  \normalsize\rmfamily 
+}
+
+% Table head: formatting
+\newcommand\tablehead{%
+  \tableheadfontsize%
+  \sffamily\bfseries%
+  %\slshape
+  %\color{white}
+}
+
+%% ------------------------------------------------------
+%% Special cells
+%% ------------------------------------------------------
+
 %% from: http://tex.stackexchange.com/questions/2441/how-to-add-a-forced-line-break-inside-a-table-cell
 \newcommand{\mcell}[2][c]{%
   \begin{tabular}[c]{@{}#1@{}}#2\end{tabular}}
