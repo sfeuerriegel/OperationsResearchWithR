@@ -1,0 +1,30 @@
+\RequirePackage{ifthen}
+
+\mode<presentation>
+\renewcommand{\emph}[1]{{\usebeamercolor[fg]{maincolor}#1}}
+
+% Margin festlegen, mit dem Foliennummer und Vorlesungsinfos an den Rand geschrieben werden
+\newlength{\marginSide}
+\setlength{\marginSide}{0.4cm}% 0.69in* 64/127 *2.54cm/in
+\newlength{\marginBottom}
+\setlength{\marginBottom}{0.3cm}%
+
+\setbeamertemplate{footline}{
+    \hspace{0cm} % Probleme mit korrekter Positionierung des Footers, wenn alle Bilder und Texte nur als \pgf* eingefügt werden
+
+    \ifnum\c@framenumber=1\else
+        \pgftext[right,bottom,at=\pgfpoint{\paperwidth-\marginSide}{\marginBottom}]{
+            \usebeamercolor[fg]{frame number in foot}%
+            \tiny\insertframenumber{}
+        }
+        \pgftext[left,bottom,at=\pgfpoint{\marginSide}{\marginBottom}]{
+            \usebeamercolor[fg]{title in foot}%
+            \tiny
+            \insertshorttitle
+            \ifx\insertsectionhead\@empty
+            \else
+                : \insertsectionhead
+            \fi
+        }
+    \fi
+}

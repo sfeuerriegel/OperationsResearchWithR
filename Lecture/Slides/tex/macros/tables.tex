@@ -1,0 +1,8 @@
+%% from: http://tex.stackexchange.com/questions/2441/how-to-add-a-forced-line-break-inside-a-table-cell
+\newcommand{\mcell}[2][c]{%
+  \begin{tabular}[c]{@{}#1@{}}#2\end{tabular}}
+\newcommand{\mcellt}[2][c]{%
+  \begin{tabular}[t]{@{}#1@{}}#2\end{tabular}}
+
+\newcommand{\stackedcell}[2][c]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}

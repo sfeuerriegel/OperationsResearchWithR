@@ -1,0 +1,31 @@
+\RequirePackage{ifthen}
+
+\mode<presentation>
+
+\defbeamertemplate*{title page}{}{
+    \vfill
+    \begin{centering}
+        {
+            \usebeamercolor[fg]{title}%
+            \usebeamerfont{title}
+                \inserttitle\\
+        }
+        \vspace{2em}
+
+        \usebeamercolor[fg]{normal text}%
+        \CourseTitle~\ifx\insertsectionhead\@empty%
+        %
+        \else%
+            (Part \thisno)%
+        \fi%
+        \\
+        
+%        \insertdate\\
+        \insertauthor\\
+    \end{centering}
+    \vfill
+}
+
+\setbeamertemplate{blocks}[default]
+
+

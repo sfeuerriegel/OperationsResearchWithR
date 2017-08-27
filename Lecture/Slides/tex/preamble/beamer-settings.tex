@@ -1,0 +1,32 @@
+\mode<presentation>
+{
+  \usetheme{Teaching}
+  \beamertemplatenavigationsymbolsempty 
+
+\setbeamertemplate{sections/subsections in toc}[square]
+\setbeamertemplate{enumerate items}[square] % Places the numbers on little squares
+
+  \setbeamercovered{transparent}
+  
+ \renewcommand\boldmath{\mathversion{bold}} %% Fix conflict with package bm inside mathptmx
+}
+   
+\AtBeginSubsection[]
+{
+  \begin{frame}<presentation>{Outline}
+    \tableofcontents[sectionstyle=show/hide,subsectionstyle=show/shaded/hide]
+  \end{frame}
+}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>{Outline}
+    \tableofcontents[sectionstyle=show/shaded,subsectionstyle=hide]
+  \end{frame}
+}
+
+\mode<handout>
+{
+  \usepackage{pgfpages}
+  \pgfpagesuselayout{4 on 1}[a4paper,border shrink=5mm]
+}

@@ -1,0 +1,41 @@
+%% ------------------------------------------------------
+%% Maths
+%% ------------------------------------------------------
+ 
+% Extends and corrects amsmath
+\usepackage[fixamsmath,disallowspaces]{mathtools}
+ 
+% Warnings for commands that are incompatible with amsmath
+\usepackage[
+  all,
+  warning
+]{onlyamsmath}
+
+% Using bold greek letters with \bf
+\usepackage{bm}
+
+
+%% ------------------------------------------------------
+%% Units
+%% ------------------------------------------------------
+ 
+\usepackage{siunitx}
+    \sisetup{
+        detect-all,
+        input-signs={+-<>\leq\geq\pm\mp\approx\sim},
+        retain-explicit-plus,
+    }
+
+% Allows page breaks in mathemaical environments
+\allowdisplaybreaks
+
+%% ------------------------------------------------------
+%% Customizations
+%% ------------------------------------------------------
+
+ 
+%  Exchange epsilon
+
+\let\ORGvarepsilon=\varepsilon
+\let\varepsilon=\epsilon
+\let\epsilon=\ORGvarepsilon
