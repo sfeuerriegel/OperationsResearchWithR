@@ -7,8 +7,6 @@ R is widely taught in business courses and, hence, known by most data scientists
 
 The materials starts with a review of numerical and linear algebra basics for optimization. Here, participants learn how to derive a problem statement that is compatible with solving algorithms. This is followed by an overview on problem classessuch as one and multi-dimensional problems. Starting with linear and quadratic algorithms, we also cover convex optimization, followed by non-linear approaches such as gradient based (gradient descent methods), Hessian based (Newton and quasi-Newton methods) and non-gradient based (Nelder-Mead). We finally demonstrate the potent capabilities of R for Operations Research: we show how to solve optimization problems in industry and business, as well as illustrate the use in methods for statistics and data mining (e.g. quantile regression). All examples are supported by appropriate visualizations.
 
-*Notes for lecturers:* All TeX source codes are also included in the repository. This holds for [all figures](Graphics) that come as MS Visio, PDF and PNG. 
-
 ## Materials
 
 **Lectures**
@@ -17,8 +15,6 @@ The materials starts with a review of numerical and linear algebra basics for op
 * [Session 2: Introduction to R](Lecture/Slides/2_IntroductionR.pdf)
 * [Session 3: Advanced R (Visualization and Programming)](Lecture/Slides/3_AdvancedR.pdf)
 * [Session 4: Numerical Analysis](Lecture/Slides/4_Numerics.pdf)
-
-For lectures, we also provide all questions used in the slides as a [raw file](Lecture/Questions). 
 
 **Exercise sheets**
 
@@ -34,6 +30,13 @@ For lectures, we also provide all questions used in the slides as a [raw file](L
 **Misc**
 
 * [Reference Card with R](ReferenceCard/R_Reference_Card.pdf) 
+
+## Notes for lecturers
+
+* All TeX source codes are also included in the repository. 
+* This holds for [all figures](Graphics) that come as MS Visio, PDF and PNG. 
+* For lectures, we also provide all questions used in the slides as a [raw file](Lecture/Questions). 
+* The document contains a file ````install_libraries.R``` that automatically installs all packages that are used at one point or the other throughout the course.
 
 ## Acknowledgments
 
