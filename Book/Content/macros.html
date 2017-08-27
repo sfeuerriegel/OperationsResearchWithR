@@ -1,0 +1,127 @@
+<div style="display:none;">
+$$
+\newcommand{\itemmath}[1]{$#1$}
+\newcommand{\titlemath}[1]{$#1$}
+\newcommand{\captionmath}[1]{$\protect\captionmathfont{#1}$}
+  \newcommand{\captionmathfonttoc}[1]{\mathsf{#1}}
+  \newcommand{\captionmathfonttext}[1]{\bm{\mathsf{#1}}}
+  \let\captionmathfont=\captionmathfonttext
+\newcommand{\sectionmath}[1]{$\protect\sectionmathfont{#1}$}
+  \newcommand{\sectionmathfonttoc}[1]{#1}
+  \newcommand{\sectionmathfonttext}[1]{\mathsf{#1}}
+  \let\sectionmathfont=\sectionmathfonttext
+
+\newcommand\eref[1]{\tag*{\ref{#1}}} 
+
+\newcommand\const{\mathsf{const.}}
+\newcommand\rp{^{-1}}
+\newcommand\rps{^{-2}}
+\newcommand\rpc{^{-3}}
+
+\newcommand\transpose{^T} 
+\newcommand\rptranspose{^{-T}} 
+\newcommand\pseudoinverse{^{+}}
+
+\newcommand\define{:=} 
+\newcommand\ldefine{=:}
+\newcommand{\setsep}{\, | \,}
+
+
+
+
+
+\newcommand{\correspond}{\mathrel{\widehat{=}}}
+
+\newcommand{\norm}[1]{\left\Vert #1 \right\Vert}
+\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
+
+
+
+
+  \newcommand{\vecval}[1]{\boldsymbol{#1}}
+  \newcommand{\matval}[1]{#1}
+
+\newcommand{\sspace}{\quad}
+\newcommand{\wspace}{\qquad}
+
+\newcommand{\sand}{\sspace\text{and}\sspace}
+\newcommand{\wand}{\wspace\text{and}\wspace}
+\newcommand{\for}{\text{for }}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+
+\newcommand{\unitvec}[2]{{\vecval{u}_{#1}}}
+\newcommand{\identitymat}[1]{\matval{\mathup{I}}_{#1,#1}}
+\newcommand{\permutemat}{\matval{\Pi}}
+\newcommand{\zerovec}[1]{\vecval{0}_{#1}}
+\newcommand{\zeromat}[2]{\matval{0}_{#1,#2}}
+
+\newcommand{\fulfill}{\stackrel{!}{=}}
+\newcommand{\inlineortho}{\bot}
+\newcommand{\ortho}{\,\, \inlineortho \,\,}
+\newcommand{\iszero}[1]{\underbrace{#1}_{=0}}
+
+\newcommand{\vecsize}[1]{\in\R^{#1}}
+\newcommand{\matsize}[2]{\in\R^{#1 \times #2}}
+
+\newcommand{\Tsstep}[1]{\matval{\overline{#1}}}
+\newcommand{\sstep}[1]{\matval{\overline{#1}}}
+\newcommand{\Sstep}[1]{\matval{\ddot{#1}}}
+\newcommand{\dual}[1]{\matval{\hat{#1}}}
+\newcommand{\dualvec}[1]{\hat{#1}}
+\newcommand{\append}[1]{\underline{#1}}
+
+
+\newcommand{\ATpower}[1]{{( \matval{A}\transpose )}^{#1}}
+\newcommand{\bracketT}[1]{{\left( #1 \right)}\transpose}
+
+\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
+\newcommand{\linearspan}[1]{\mathsf{span}\left( #1 \right)}
+\newcommand{\conj}[1]{\overline{#1}}
+
+\newcommand{\concatmat}[1]{\Concat{#1}}
+\newcommand{\concatvec}[1]{\left[#1\right]}
+\newcommand{\concatmatsep}{\, | \,}
+
+\newcommand{\lincomb}[1]{\linearspan{#1}}
+
+\newcommand{\vecprod}[2]{\left\langle #1, #2 \right\rangle}
+
+\newcommand{\sign}[1]{\mathup{sign}\left( #1 \right)}
+
+\newcommand{\diag}{\operatorname{diag}}
+
+
+
+\newcommand{\vvector}[2]{\left[\begin{array}{c} #1 \\ #2 \end{array} \right]}
+\newcommand{\vvvector}[3]{\left[\begin{array}{c} #1 \\ #2 \\ #3 \end{array} \right]}
+
+\newcommand{\intervaloo}[2]{\left(#1,#2\right)}
+\newcommand{\intervaloc}[2]{\left(#1,#2\right]}
+\newcommand{\intervalco}[2]{\left[#1,#2\right)}
+\newcommand{\intervalcc}[2]{\left[#1,#2\right]}
+
+\newenvironment{mmatrix}{\begin{bmatrix}}{\end{bmatrix}}
+
+\newcommand{\Oh}[1]{\mathsf{O}\left(#1\right)}
+
+\newcommand{\e}[1]{\mathup{e}^{#1}}
+
+\newcommand{\dd}{\mathop{}\!\mathsf{d}}
+\newcommand{\Laplace}{\Updelta}
+
+\newcommand\op[1]{{\hat{\mathsf{#1}}}}  
+
+\newcommand\imaginary{\mathup{i}}
+
+
+
+  \def\clap#1{\hbox to 0pt{\hss#1\hss}}
+  \def\mathclap{\mathpalette\mathclapinternal}
+  \def\mathclapinternal#1#2{
+    \clap{$\mathsurround=0pt#1{#2}$}
+  }
+$$
+</div>
