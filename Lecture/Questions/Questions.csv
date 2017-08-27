@@ -1,0 +1,18 @@
+Type,Question,Answer 1,Answer 2,Answer 3,Answer 4,Answer 5,Answer 6,Answer 7,Answer 8,Answer 9,Correct
+single,What would the above plot look like?,Answer A,Answer B,Answer C,,,,,,,2
+single,How would you reproduce the above plot?,"plot(x, kink(x), type=""l"", main="""")","plot(x, kink(x), type=""l"", lab="""")","plot(x, abs(x), type=""l"", ylab="""", xlab="""")",,,,,,,3
+single,What is the Taylor series for f(x)=e^x with x0=0?,x / 1! + x^2 / 2! + x^3 / 3! + ...,1 + x/1 + x^2/2 + x^3/3 + ...,1 + x / 1! + x^2 / 2! + x^3 / 3! + ...,,,,,,,3
+single,What is the Taylor series for f(x)=1/1-x with x0=0?,1/x + 1 + x + x^2 + x^3 + ...,1 + x + x^2 + x^3 + ...,x + x^2 + x^3 + ...,,,,,,,2
+single,How to calculate the derivative at x=2 with centered differences in R?,(sin(2+h) - sin(2-h)) / (2*h),(sin(2+h) - sin(2-h)) / 2*h,(sin(2+h) - sin(2)) / (2*h),,,,,,,1
+single,What is the derivative of log(4-x)?,1/(x-4),4/x,1/(4-x),,,,,,,1
+single, What is correct for the function f?,Continuous and differentiable,Continuous but not differentiable,Discontinuous and not differentiable,,,,,,,3
+single,Which of the following is not an eigenvector/eigenvalue pair?,lambda_1=1 and v_1,lambda_2=2 and v_2,lambda_3=3 and v_3,,,,,,,2
+single,Which of the following is not an eigenvector/eigenvalue pair?,lambda_1=1 and v_1,lambda_2=2 and v_1,lambda_3=3 and v_1,,,,,,,""
+single,What is the distance in L1- and L2-norm?,8 and 16,8 and sqrt(32),sqrt(32) and 8,,,,,,,2
+single,Convert the number 723 from base 10 into base 2,111 010 011,10 011 010 011,1 011 010 011,,,,,,,""
+single,Convert the number 10 011 010 from base 2 into base 10,262,138,154,,,,,,,3
+multi,How would you reproduce the above plot?,Option 1,Option 2,Option 3,,,,,,,3
+multi,What would the above plot look like?,Option A,Option B,Option C,,,,,,,2
+multi,How would you reproduce the above plot? ,Option 1,Option 2,Option 3,,,,,,,3
+multi,What type is the following optimization problem?,MIP,MILP,MINLP,,,,,,,3
+single,How was the pace of today's class?,Too slow,A bit too slow,Ok,A bit too fast,Too fast,,,,,""

@@ -1,0 +1,332 @@
+<?xml version="1.0" ?>
+<quiz>
+  <question type='multichoice'>
+    <name>
+      <text>What would the above plot look like?</text>
+    </name>
+    <questiontext format='html'>
+      <text>What would the above plot look like?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>Answer A</text>
+    </answer>
+    <answer fraction='100'>
+      <text>Answer B</text>
+    </answer>
+    <answer fraction='0'>
+      <text>Answer C</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>How would you reproduce the above plot?</text>
+    </name>
+    <questiontext format='html'>
+      <text>How would you reproduce the above plot?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>plot(x, kink(x), type=&quot;l&quot;, main=&quot;&quot;)</text>
+    </answer>
+    <answer fraction='0'>
+      <text>plot(x, kink(x), type=&quot;l&quot;, lab=&quot;&quot;)</text>
+    </answer>
+    <answer fraction='100'>
+      <text>plot(x, abs(x), type=&quot;l&quot;, ylab=&quot;&quot;, xlab=&quot;&quot;)</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>What is the Taylor series for f(x)=e^x with x0=0?</text>
+    </name>
+    <questiontext format='html'>
+      <text>What is the Taylor series for f(x)=e^x with x0=0?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>x / 1! + x^2 / 2! + x^3 / 3! + ...</text>
+    </answer>
+    <answer fraction='0'>
+      <text>1 + x/1 + x^2/2 + x^3/3 + ...</text>
+    </answer>
+    <answer fraction='100'>
+      <text>1 + x / 1! + x^2 / 2! + x^3 / 3! + ...</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>What is the Taylor series for f(x)=1/1-x with x0=0?</text>
+    </name>
+    <questiontext format='html'>
+      <text>What is the Taylor series for f(x)=1/1-x with x0=0?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>1/x + 1 + x + x^2 + x^3 + ...</text>
+    </answer>
+    <answer fraction='100'>
+      <text>1 + x + x^2 + x^3 + ...</text>
+    </answer>
+    <answer fraction='0'>
+      <text>x + x^2 + x^3 + ...</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>How to calculate the derivative at x=2 with centered differences in R?</text>
+    </name>
+    <questiontext format='html'>
+      <text>How to calculate the derivative at x=2 with centered differences in R?</text>
+    </questiontext>
+    <answer fraction='100'>
+      <text>(sin(2+h) - sin(2-h)) / (2*h)</text>
+    </answer>
+    <answer fraction='0'>
+      <text>(sin(2+h) - sin(2-h)) / 2*h</text>
+    </answer>
+    <answer fraction='0'>
+      <text>(sin(2+h) - sin(2)) / (2*h)</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>What is the derivative of log(4-x)?</text>
+    </name>
+    <questiontext format='html'>
+      <text>What is the derivative of log(4-x)?</text>
+    </questiontext>
+    <answer fraction='100'>
+      <text>1/(x-4)</text>
+    </answer>
+    <answer fraction='0'>
+      <text>4/x</text>
+    </answer>
+    <answer fraction='0'>
+      <text>1/(4-x)</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text> What is correct for the function f?</text>
+    </name>
+    <questiontext format='html'>
+      <text> What is correct for the function f?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>Continuous and differentiable</text>
+    </answer>
+    <answer fraction='0'>
+      <text>Continuous but not differentiable</text>
+    </answer>
+    <answer fraction='100'>
+      <text>Discontinuous and not differentiable</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>Which of the following is not an eigenvector/eigenvalue pair?</text>
+    </name>
+    <questiontext format='html'>
+      <text>Which of the following is not an eigenvector/eigenvalue pair?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>lambda_1=1 and v_1</text>
+    </answer>
+    <answer fraction='100'>
+      <text>lambda_2=2 and v_2</text>
+    </answer>
+    <answer fraction='0'>
+      <text>lambda_3=3 and v_3</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>Which of the following is not an eigenvector/eigenvalue pair?</text>
+    </name>
+    <questiontext format='html'>
+      <text>Which of the following is not an eigenvector/eigenvalue pair?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>lambda_1=1 and v_1</text>
+    </answer>
+    <answer fraction='0'>
+      <text>lambda_2=2 and v_1</text>
+    </answer>
+    <answer fraction='0'>
+      <text>lambda_3=3 and v_1</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>What is the distance in L1- and L2-norm?</text>
+    </name>
+    <questiontext format='html'>
+      <text>What is the distance in L1- and L2-norm?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>8 and 16</text>
+    </answer>
+    <answer fraction='100'>
+      <text>8 and sqrt(32)</text>
+    </answer>
+    <answer fraction='0'>
+      <text>sqrt(32) and 8</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>Convert the number 723 from base 10 into base 2</text>
+    </name>
+    <questiontext format='html'>
+      <text>Convert the number 723 from base 10 into base 2</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>111 010 011</text>
+    </answer>
+    <answer fraction='0'>
+      <text>10 011 010 011</text>
+    </answer>
+    <answer fraction='0'>
+      <text>1 011 010 011</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>Convert the number 10 011 010 from base 2 into base 10</text>
+    </name>
+    <questiontext format='html'>
+      <text>Convert the number 10 011 010 from base 2 into base 10</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>262</text>
+    </answer>
+    <answer fraction='0'>
+      <text>138</text>
+    </answer>
+    <answer fraction='100'>
+      <text>154</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>How would you reproduce the above plot?</text>
+    </name>
+    <questiontext format='html'>
+      <text>How would you reproduce the above plot?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>Option 1</text>
+    </answer>
+    <answer fraction='0'>
+      <text>Option 2</text>
+    </answer>
+    <answer fraction='100'>
+      <text>Option 3</text>
+    </answer>
+    <single>false</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>What would the above plot look like?</text>
+    </name>
+    <questiontext format='html'>
+      <text>What would the above plot look like?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>Option A</text>
+    </answer>
+    <answer fraction='100'>
+      <text>Option B</text>
+    </answer>
+    <answer fraction='0'>
+      <text>Option C</text>
+    </answer>
+    <single>false</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>How would you reproduce the above plot? </text>
+    </name>
+    <questiontext format='html'>
+      <text>How would you reproduce the above plot? </text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>Option 1</text>
+    </answer>
+    <answer fraction='0'>
+      <text>Option 2</text>
+    </answer>
+    <answer fraction='100'>
+      <text>Option 3</text>
+    </answer>
+    <single>false</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>What type is the following optimization problem?</text>
+    </name>
+    <questiontext format='html'>
+      <text>What type is the following optimization problem?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>MIP</text>
+    </answer>
+    <answer fraction='0'>
+      <text>MILP</text>
+    </answer>
+    <answer fraction='100'>
+      <text>MINLP</text>
+    </answer>
+    <single>false</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+  <question type='multichoice'>
+    <name>
+      <text>How was the pace of today&apos;s class?</text>
+    </name>
+    <questiontext format='html'>
+      <text>How was the pace of today&apos;s class?</text>
+    </questiontext>
+    <answer fraction='0'>
+      <text>Too slow</text>
+    </answer>
+    <answer fraction='0'>
+      <text>A bit too slow</text>
+    </answer>
+    <answer fraction='0'>
+      <text>Ok</text>
+    </answer>
+    <answer fraction='0'>
+      <text>A bit too fast</text>
+    </answer>
+    <answer fraction='0'>
+      <text>Too fast</text>
+    </answer>
+    <single>true</single>
+    <answernumbering>abc</answernumbering>
+  </question>
+</quiz>
