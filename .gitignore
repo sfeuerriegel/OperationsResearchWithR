@@ -11,3 +11,5 @@
 /Lecture/Slides/*.aux
 /Lecture/Slides/*.out
 /Exercises/*.tps
+/Lecture/Slides/*.tps
+/Lecture/Slides/figure
