@@ -1,0 +1,338 @@
+# Linear and Quadratic Optimization {#lp_qp}
+
+## Linear Programming
+
+Mathematical description
+
+- In compact form
+
+\begin{equation}
+\min_{\vecval{x}} c^T \vecval{x} ~ = \min_{\vecval{x}} c_1x_1 + \dots + c_n x_n ~  \text{subject~to} ~ A\vecval{x} \geq \vecval{b} , ~ \vecval{x} \geq 0
+\label{eq:lp:compact}
+\end{equation}
+
+- In matrix notation
+\begin{equation}\begin{split}
+\underbrace{
+	\min_{\vecval{x}} 
+		\begin{bmatrix}
+			c_1 \\
+			c_2 \\
+			\vdots \\
+			c_n
+		\end{bmatrix}^T
+		\begin{bmatrix}
+			x_1 \\
+			x_2 \\
+			\vdots \\
+			x_n
+		\end{bmatrix}
+		}_{\text{Objective}}
+	\text{s.t.} ~
+		\underbrace{
+		\begin{bmatrix}
+			a_{11} & a_{12} & \dots & a_{1n}\\
+			a_{21} & a_{22} & \dots & a_{2n}\\
+			\vdots & \vdots & \ddots & \vdots \\
+			a_{m1} & a_{m2} & \dots & a_{mn}
+		\end{bmatrix}
+		\begin{bmatrix}
+			x_1 \\
+			x_2 \\
+			\vdots \\
+			x_n
+		\end{bmatrix}
+	\geq
+		\begin{bmatrix}
+			b_1 \\
+			b_2 \\
+			\vdots \\
+			b_n
+		\end{bmatrix}
+		}_{\text{First constraint}}
+	,~
+	\underbrace{
+		\begin{bmatrix}
+			x_1 \\
+			x_2 \\
+			\vdots \\
+			x_n
+		\end{bmatrix}
+	\geq 0
+	}_{\text{Second constraint}}
+\end{split}\label{eq:lp:matrix}\end{equation}
+
+## Example Linear Programming
+
+- *Problem description* 
+    - Products A and B are sold at EUR~25 and EUR~20 respectively
+	  - Product A requires 20 resources whereas product B needs 12
+	  - Per day only 1800 resources are available
+	  - Both products require 1/15~hours to be made
+	  - We have a total of 8~hours time
+- If $x_1$ is the number items produced of type A and $x_2$ the type B products, then the return or *objective function* is
+
+\begin{equation}
+\max_{\vecval{x}} 25 x_1 + 20 x_2 = \max_{\vecval{x}} \left[ \begin{array}{c} 25 \\ 20 \end{array} \right]^T \left[ \begin{array}{c} x_1 \\ x_2 \end{array} \right] 
+\end{equation}
+
+- The resource constraint is given by $20 x_1 + 12 x_2 \leq 1800$ and the hour constraint by $\frac{1}{15} x_1 + \frac{1}{15} x_2 \leq 8$
+
+- Both constraints can be written in matrix form
+
+\begin{equation}
+A\vecval{x} =
+\left[ \begin{array}{rr} 20 & 12 \\ \frac{1}{15}& \frac{1}{15} \end{array} \right] 
+\left[ \begin{array}{r} x_1 \\ x_2 \end{array} \right]
+\leq 
+\left[ \begin{array}{r} 1800 \\ 8 \end{array} \right] = \vecval{b}
+\end{equation}
+
+- Visualization of the production problem and its constraints
+```{r echo=FALSE,results='hide',fig.width=6,fig.height=4,out.width='80%',message=FALSE,warning=FALSE}
+xy <- as.matrix(expand.grid(seq(0,75,length = 101),seq(25,150,length = 101)))
+colnames(xy) <- c("x1", "x2")
+df <- data.frame(xy)
+df[["y"]] <- df$x1 * 25 + df$x2 * 20
+
+#plot linear with wireframe
+#require(lattice)
+#wireframe(y ~ x1*x2, data = df, shade = TRUE, drape=FALSE, scales = list(arrows = FALSE), screen = list(z=-240, x=-70, y=0))
+
+rx1 <- seq(0,75, length=101)
+constraints <- data.frame(x = c(rx1, rx1), 
+                          y=c((1800-20*rx1)/12, (8-1/15*rx1)*15), 
+                          Constraint = c(rep("Resource", 101), rep("Time", 101)))
+
+# plot linear as tiles
+library(ggplot2)
+print(ggplot(data=df, aes(x=x1, y=x2)) +
+  geom_tile(aes(fill = y)) +
+  geom_line(data = constraints, aes(x = x, y = y, group = Constraint, colour = Constraint), size = 2)+
+  geom_point(aes(x=45, y=75), size = 4, colour = "black")+
+  xlab("x_1") + ylab("x_2") +
+  scale_fill_gradient(low="black", high="white", name="Objectve") +
+  guides(fill=guide_colorbar(barwidth=15)) +
+  theme_bw() +
+  theme(legend.position="top"))
+```
+
+### Constrained Optimization
+
+Describes the optimization of an *objective function* for a set of variables with equality or inequality constraints in place for these variables
+
+## Linear Programming with R
+
+- Coefficients $c$ are included in the vector `objective`.`in`, constraints $A$ given as matrix `const`.`mat`, constraint direction as `const`.`dir` and the constraint value $b$ as `const`.`rhs`
+- In R package `optimize`
+
+```{r eval=FALSE,size='scriptsize'}
+require(lpSolve)
+lp(direction="min", objective.in, const.mat, const.dir, 
+const.rhs, int.vec)
+```
+
+- Implementation in R
+
+```{r ,message=FALSE,warning=FALSE,size='scriptsize'}
+require(lpSolve)
+objective.in <- c(25, 20)
+const.mat <- matrix(c(20, 12, 1/15, 1/15), nrow=2, byrow=TRUE)
+const.rhs <- c(1800, 8)
+const.dir <- c("<=", "<=")
+optimum <- lp (direction = "max", objective.in, const.mat, 
+const.dir, const.rhs)
+optimum$solution
+optimum$objval
+```
+
+## Quadratic Programming
+
+Mathematical description
+
+- In compact form
+
+\begin{equation}
+\min_{\vecval{x}} \frac{1}{2} \vecval{x}^T D \vecval{x} - \vecval{d}^T \vecval{x}  ~  \text{subject~to} ~ A^T\vecval{x} \geq \vecval{b} 
+\label{eq:qp:compact}
+\end{equation}
+
+- In matrix notation
+
+\begin{equation}
+	\min_x 
+		\begin{bmatrix}
+			x_1 \\
+			x_2 \\
+			\vdots \\
+			x_n
+		\end{bmatrix}^T
+		\begin{bmatrix}
+			d_{11} & d_{12} & \dots & d_{1n}\\
+			d_{21} & d_{22} & \dots & d_{2n}\\
+			\vdots & \vdots & \ddots & \vdots \\
+			d_{m1} & d_{m2} & \dots & d_{mn}
+		\end{bmatrix}
+		\begin{bmatrix}
+			x_1 \\
+			x_2 \\
+			\vdots \\
+			x_n
+		\end{bmatrix}-
+		\begin{bmatrix}
+			d_1 \\
+			d_2 \\
+			\vdots \\
+			d_n
+		\end{bmatrix}
+		\begin{bmatrix}
+			x_1 \\
+			x_2 \\
+			\vdots \\
+			x_n
+		\end{bmatrix}
+	\text{s.t.} ~
+		\begin{bmatrix}
+			a_{11} & a_{12} & \dots & a_{1n}\\
+			a_{21} & a_{22} & \dots & a_{2n}\\
+			\vdots & \vdots & \ddots & \vdots \\
+			a_{m1} & a_{m2} & \dots & a_{mn}
+		\end{bmatrix}^T
+		\begin{bmatrix}
+			x_1 \\
+			x_2 \\
+			\vdots \\
+			x_n
+		\end{bmatrix}
+	\geq
+		\begin{bmatrix}
+			b_1 \\
+			b_2 \\
+			\vdots \\
+			b_n
+		\end{bmatrix}
+\label{eq:qp:matrix}\end{equation}
+
+## Quadratic Programming
+
+- *Parameter mapping* in R
+	  - *Quadratic coefficients* $D$ are mapped to `Dmat` 
+    -  *Linear coefficients* $d$ are mapped to `dvec`
+    - *Constraints matrix* $A$ is mapped to `Amat`
+    - *Constraint equalities* or inequalities $b$ are provided in `bvec`
+    - Parameter `meq`$=n$ sets the first $n$ entries as *equality* constraints; all further constraints are inequality
+- Function call with package `quadprog`
+
+```{r eval=FALSE}
+require(quadprog)
+solve.QP(Qmat, dvec, Amat, bvec, meq)
+```
+
+- Many problems can formulated in quadratic form, e.g., portfolio optimization, circus tent problem, demand response, ...
+
+## Example Circus Tent
+
+```{r setup,echo=FALSE,eval=TRUE}
+library(knitr)
+library(rgl)
+knit_hooks$set(rgl = hook_rgl)
+```
+
+```{r circus_tent_problem,rgl=TRUE,fig.show='last',echo=FALSE,eval=TRUE,crop=TRUE,message=FALSE,warning=FALSE,results='hide',fig.width=4,fig.height=4,out.width='80%'}
+# Circus tent
+# Build the pole grid using basic symmetries.
+# http://blog.ryanwalker.us/2014/04/the-circus-tent-problem-with-rs-quadprog.html
+q2 = matrix(0,18,18)
+q2[8:9,8:9] = .3
+q2[17:18,17:18] = 1/2
+q1 <- q2[,18:1]
+top  <- cbind(q2,q1)
+z <- rbind(top,top[18:1,])
+
+# Plot
+library(rgl)  
+x <- (1:36)/36
+y <- (1:36)/36
+open3d()
+rgl.surface(x,y, z, color='blue',alpha=.75, smooth=TRUE)
+rgl.surface(x,y, matrix(1/2,36,36), color='red', front='lines', back='lines')
+rgl.bg(color="white")
+rgl.viewpoint(theta = 15, phi = 20, zoom = .8)
+```
+
+### Question
+
+How to bring this into quadratic form?
+
+- How to calculate the height of the tent at every point?
+- Tent height at each grid point $(x, y)$ is given by $u(x, y)$
+- Tent sheet settles into minimal energy state $E[u]$ for each height $u$
+- Use the *Dirichlet energy* to estimate $E[u]$ of $u$
+- We discretize the energy and ultimately come up with 
+
+\begin{equation}
+	E[u] \approx \frac{h_x h_y}{2} ~ \vecval{u}^T L \vecval{u}
+\end{equation} 
+		
+- Which is quadratic
+
+Full description:
+
+http://blog.ryanwalker.us/2014/04/the-circus-tent-problem-with-rs-quadprog.html
+
+
+### Visualized solution
+
+```{r circus_tent_solution,rgl=TRUE,fig.show='last',echo=FALSE,eval=TRUE,crop=TRUE,message=FALSE,warning=FALSE,results='hide',fig.width=2,fig.height=2,out.width='80%'}
+nr <- nrow(z)
+nc <- ncol(z)
+N  <- nr*nc
+bvec <- matrix(z,N,1,byrow=FALSE)
+
+# 2D Discrete Laplacian on an lx by ly rectangular grid with
+# nx grid lines in the x direction and ny grid lines in the y direction.
+Laplacian2D <- function(lx,ly, nx,ny){
+  hx <- lx/(nx-1)
+  hy <- ly/(ny-1)
+  tr_x <- c(2,-1,rep(0,nx-2))
+  tr_y <- c(2,-1,rep(0,ny-2))
+  Tx <- toeplitz(tr_x)/(hx^2)
+  Ty <- toeplitz(tr_y)/(hy^2)
+  Ix <- diag(nx)
+  Iy <- diag(ny)
+  L <- kronecker(Tx,Iy) + kronecker(Ix,Ty)
+  return(L)
+}
+
+# Solve the QP:
+library(quadprog)
+Ny  <- nrow(z)
+Nx  <- ncol(z)
+N   <- Nx*Ny
+hx  <- 1/(Nx-1)
+hy  <- 1/(Ny-1)
+
+# System matrices
+# Note: quadprog's quadratic form is -d^T x + 1/2 x^T D x with t(A)%*%x>= b
+theta <- 1                            # coefficient for linear term
+Dmat <- hx*hy*Laplacian2D(1,1,36,36)  
+dvec <- -theta*(hx*hy)*rep(1,N)      
+Amat <- t(diag(N))
+bvec <- matrix(z,N,1,byrow=FALSE)     # lower bound
+
+# call the solver
+sol  <- solve.QP(Dmat, dvec, Amat, bvec)
+
+# extract and reshape the solution
+tent <- matrix(sol$solution,nrow(z),ncol(z), byrow=FALSE)
+
+#plot  
+open3d()
+x <- (1:Nx)/Nx
+y <- (1:Ny)/Ny
+rgl.surface(x, y , z, color='blue',alpha=.75, smooth=TRUE)
+rgl.surface(x, y , tent, color='red', front='lines', back='lines')
+rgl.bg(color="white")
+rgl.viewpoint(theta = 15, phi = 10, zoom = .7)
+```
+

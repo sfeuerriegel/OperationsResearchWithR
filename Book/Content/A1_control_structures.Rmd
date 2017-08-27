@@ -1,0 +1,379 @@
+# (APPENDIX) Control structures in R {#control_structures}
+
+## Control Flow
+
+### Managing Code Execution
+
+- *Control flow* specifies order in which statements are executed
+- Previous concepts can only execute R code in a *linear* fashion
+- *Control flow constructs* can choose which execution path to follow
+
+- Functions: Combines sequence of statements into a self-contained task
+- Conditional expressions: Different computations according to a specific condition
+- Loops: Sequence of statements which may be executed more than once
+
+
+
+
+### Functions
+
+- Functions *avoid repeating the same code* more than once 
+- Leave the current evaluation context to execute pre-defined commands
+
+```{r fig.align="center", fig.cap="", out.width="80%", echo=FALSE}
+include_figure("function.png")
+```
+
+- Extend set of built-in functions with opportunity for customization
+- Functions **can** consist of the following:
+    1. *Name* to refer to (avoid existing function names in R)
+    1. *Function body* is a sequence of statements
+    1. *Arguments* define additional parameters passed to the function body
+    1. *Return value* which can be used after executing the function
+- Simple example:
+
+```{r }
+f <- function(x,y) {
+  return(2*x + y^2)
+}
+f(-3, 5)
+```
+
+- General syntax
+
+```{r eval=FALSE}
+functionname <- function(argument1, argument2, ...) { 
+  function_body
+  return(value)
+}
+```
+
+- *Return value* is the last evaluated expression
+    - Alternative: set explicitly with `return(...)`
+- Curly brackets can be omitted if the function contains only one statement (not recommended)
+- Be cautious since the *order of the arguments matters*
+- Values in functions are *not printed* in console\\
+    - Remedy is `print(...)`
+
+
+
+### Examples of Functions
+
+```{r }
+square <- function(x) x*x # last value is return value
+square(10)
+```
+
+```{r }
+cubic <- function(x) {
+  # Print value to screen from inside the function
+  print(c("Value: ", x, " Cubic: ", x*x*x))
+  # no return value
+}
+cubic(10)
+```
+
+```{r }
+hello <- function() { # no arguments
+  print("world")
+}
+hello()
+```
+
+```{r } 
+my.mean <- function(x) {
+  return (sum(x)/length(x))
+}
+my.mean(1:100)
+```
+
+### Scope in Functions
+
+- Variables created inside a function only exists within it $\rightarrow$ *local*
+- They are thus inaccessible from outside of the function
+- *Scope* denotes when the name binding of variable is valid
+
+```{r }
+x <- "A"
+g <- function(x) {
+  x <- "B"
+  return(x)
+}
+x <- "C"
+```
+
+- What are the values?
+
+```{r function_scope,eval=FALSE}
+g(x) # Return value of function x
+x    # Value of x after function execution
+```
+
+- Solution
+
+```{r ,echo=FALSE}
+<<function_scope>>
+```
+
+### Unevaluated Expressions
+
+- Expressions can store *symbolic mathematical statements* for later modifications (e.g. symbolic derivatives)
+- Let's define an example via `expression(...)`
+
+```{r }
+f <- expression(x^3+3*y-y^3-3*x)
+f
+```
+
+- If *evaluation* of certain parameters becomes necessary, one can use `eval(...)`
+
+```{r }
+x <- 2
+y <- 3
+eval(f)
+```
+
+### If-Else Conditions
+
+- *Conditional execution* requires a condition to be met
+
+```{r fig.align="center", fig.cap="", out.width="80%", echo=FALSE}
+include_figure("if-else.png")
+```
+
+### If-Else Conditions
+
+- Keyword `if` with optional `else` clause
+- General syntax:
+
+**if condition**:
+
+```{r ,eval=FALSE}
+if (condition) {
+  statement1
+}
+```
+
+If `condition` is true, then `statement` is executed
+
+**if-else condition**:
+
+```{r ,eval=FALSE}
+if (condition) {
+  statement1
+} else {
+  statement2
+}
+```
+
+If `condition` is true, then `statement1` is executed, otherwise `statement2`
+
+### If-Else Conditions
+
+- Example
+
+```{r }
+grade <- 2
+if (grade <= 4) {
+  print("Passed")
+} else {
+  print("Failed")
+}
+```
+
+```{r }
+grade <- 5
+if (grade <= 4) {
+  print("Passed")
+} else {
+  print("Failed")
+}
+```
+
+- Condition must be of length 1 and evaluate as either `TRUE` or `FALSE`
+
+```{r }
+if (c(TRUE, FALSE)) { # don't do this!
+  print("something")
+}
+```
+
+### Else-If Clauses
+
+- *Multiple conditions* can be checked with `else if` clauses
+- The last `else` clause applies when no other conditions are fulfilled
+- The same behavior can also be achieved with *nested if-clauses*
+
+**else-if clause**:
+
+```{r ,eval=FALSE,size='scriptsize'}
+if (grade == 1) {
+  print("very good")
+} else if (grade == 2) {
+  print("good")
+} else {
+  print("not a good grade")
+}
+```
+
+**Nested if-condition**:
+
+```{r ,eval=FALSE,size='scriptsize'}
+if (grade == 1) {
+  print("very good")
+} else {
+  if (grade == 2) {
+    print("good")
+  } else {
+    print("not a good grade")
+  }
+}
+```
+
+### If-Else Function
+
+- As an alternative, one can also reach the same control flow via the function `ifelse(...)` 
+
+```{r ,eval=FALSE}
+ifelse(condition, statement1, statement2) 
+# executes statement1 if condition is true, 
+# otherwise statement2
+```
+
+```{r }
+grade <- 2
+ifelse(grade <= 4, "Passed", "Failed")
+```
+
+- `ifelse(...)` can also work with vectors as if it was applied to each element separately
+
+```{r }
+grades <- c(1, 2, 3, 4, 5)
+ifelse(grades <= 4, "Passed", "Failed")
+```
+
+- This allows for the efficient comparison of vectors
+
+### For Loop
+
+- `for` loops execute statements for a *fixed number of repetitions*
+
+```{r fig.align="center", fig.cap="", out.width="80%", echo=FALSE}
+include_figure("loop.png")
+```
+
+- General syntax
+
+```{r eval=FALSE}
+for (counter in looping_vector){
+  # code to be executed for each element in the sequence
+}
+```
+
+- In every iteration of the loop, one value in the looping vector is assigned to the `counter` variable that can be used in the statements of the body of the loop. 
+- Examples
+
+```{r eval=TRUE}
+for (i in 4:7) {
+  print(i)
+}
+```
+
+```{r eval=TRUE}
+a <- c()
+for (i in 1:3){
+  a[i] <- sqrt(i)
+}
+a
+```
+
+### While Loop
+
+- *Loop* where the number of iterations is *controlled by a condition*
+- The condition is checked in every iteration
+- When the condition is met, the loop body in curly brackets is executed 
+- General syntax
+
+```{r eval=FALSE}
+while (condition) {
+  # code to be executed
+}
+```
+
+- Examples
+
+```{r ,size='scriptsize'} 
+z <- 1
+# same behavior as for loop
+while (z <= 4) { 
+    print(z)  
+    z <- z + 1
+}
+```
+
+```{r ,size='scriptsize'} 
+z <- 1
+# iterates all odd numbers
+while (z <= 5) { 
+    z <- z + 2
+    print(z)  
+}
+```
+
+## Timing
+
+### Measuring Timings via Stopwatch
+
+- *Efficiency* is a major issue with larger datasets and complex codes
+- Timings can help in understanding scalability and bottlenecks 
+- Use a stopwatch approach measuring the duration between two `proc.time()` calls
+
+```{r ,size='scriptsize'}  
+start.time <- proc.time() # Start the clock
+
+g <- rnorm(100000)
+h <- rep(NA, 100000)
+for (i in 1:100000) { # Loop over vector, always add +1
+  h[i] <- g[i] + 1
+}
+
+# Stop clock and measure duration
+duration <- proc.time() - start.time
+```
+
+### Measuring Timings via Stopwatch
+
+- Results of `duration` have the following format
+
+```{r ,echo=FALSE}
+duration
+```
+
+- Timings are generally grouped into 3 categories
+    - *User* time measures the understanding of the R instructions
+    - *System* time measures the underlying execution time
+    - *Elapsed* is the difference since starting the stopwatch ($=$ user $+$ system)
+- Alternative approach avoiding loop
+
+```{r }
+start.time <- proc.time() # Start clock
+g <- rnorm(100000)
+h <- g + 1
+proc.time() - start.time # Stop clock
+```
+
+- Rule: *vector operations are faster* than loops
+
+### Measuring Timings of Function Calls
+
+Function `system.time(...)` can directly time function calls
+
+```{r }
+slowloop <- function(v){ 
+	for (i in v) {
+	  tmp <- sqrt(i)
+	}
+}
+
+system.time(slowloop(1:1000000)) 
+```

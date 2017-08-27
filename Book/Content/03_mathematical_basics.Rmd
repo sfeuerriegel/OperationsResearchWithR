@@ -1,0 +1,964 @@
+---
+output:
+  html_document: default
+  pdf_document: default
+---
+# Mathematical basics {#mathematical_basics}
+
+The objectives for Chapter\@ref(03_mathematical_basics) of this book are as follows. Firstly, to understand how computers store and handle numbers. Secondly, to solidify our understanding of basic operations in linear algebra and how we can implement them in R. Finally, we recapitulate the concept of derivatives and the Taylor approximation.
+
+## Number Representations
+
+Numeration systems are writing systems of mathematical notation, which are used to represent numbers in a consistent manner via a pre-defined set of symbols. In this section we introduce the concept of positional or place-value notation, and within this framework the methodology for the conversion between systems of different bases. These methods are important in order to understand how computers store and handle numbers.  
+
+### Positional Notation
+
+A positional notation system or place value notation uses the relative positon of a number to encode the order of magnitude. Alternative systems, encode the order of magnitude by using individual symbols to represent magnitude. The main advantages of a positional notation system are that it allows for the repeated use of symbols across different orders of magnitude, the representation of fractional numbers and also expanded notation. An example of the format for the decimal or base 10 system is as follows
+$d_n d_{n-1} \ldots d_2 d_1 =  d_n \cdot b^{n-1} + d_{n-1} \cdot b^{n-2} + \ldots + d_2 \cdot b + d_1$
+
+where:
+    - $b$ *base* of the number
+    - $n$ number of digits
+    - $d$ digit in the $i$-th position of the number
+
+For example: 752 is $7_3 \cdot 10^2 + 5_2 \cdot 10 + 2_1$
+
+### Base Conversions
+
+The base of positional numeric system determines the number of unique symbols available to represent numbers. For example, the decimal system has a base of 10 as it uses the numeric symbols from 0 through to 9. Computers commonly utilize a positional notation system with a base of 2, also known as the binary system. Number representations can easily be converted to a different base system. The conversion from base $b$ into base 10 via
+\begin{equation*}
+d_n \cdot b^{n-1} + d_{n-1} \cdot b^{n-2} + \ldots + d_2 \cdot b + d_1
+\end{equation*}
+
+For example, we can convert the base 10 number 752 into the equvilent base 2 number 1 011 110 000 using the beforementioned formula. 
+\begin{align*}
+& 1 \cdot 2^8 + 0 \cdot 2^7 + 1 \cdot 2^6 + 1 \cdot 2^5 + 0 \cdot 2^4 + 1 \cdot 2^3 + 0 \cdot 2^2 + 1 \cdot 2^1 + 1 \\
+= & 1 \cdot 256 + 0 \cdot 128 + 1 \cdot 64 + 1 \cdot 32 + 0 \cdot 16 + 1 \cdot 8 + 0 \cdot 4 + 1 \cdot 2 + 1 \\
+= & 363 \text{ in base 10}
+\end{align*}
+
+#### Question {-}
+
+- Convert the number 10 011 010 from base 2 into base 10
+    - 262
+    - 138
+    - 154
+- TODO Pingo
+
+#### Question {-}
+- Convert the number 723 from base 10 into base 2
+    - 111 010 011
+    - 10 011 010 011
+    - 1 011 010 011
+- TODO Pingo
+
+Table 3.1 illustrates a simple *conversion scheme* for the conversion of a number $s_1$ from base 10 to base $b$. The first step is to divide the integer value of the base 10 number $s_1$ by $b$, the base number you wish to convert to. The remainder $r_1$ then represents the number to be place in first positional slot of the number representation under the new base system. In the second step, we simply take the new integer value $s_2$ and repeat the previous step. We continue to repeat these steps until the integer $s_m$ has a value of 0. The resulting converted number is $r_m \ldots r_2 r_1$ or in words: the sequence of remainders. 
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+df1 <- data.frame(
+    c("$s_1$","$s_2$", "$\\ldots$", "$s_m$"),
+    c("$s_2 \\define \\left\\lfloor \\frac{s_1}{b} \\right\\rfloor$","$s_3 \\define \\left\\lfloor \\frac{s_2}{b} \\right\\rfloor$", "", "$\\left\\lfloor \\frac{s_m}{b} \\right\\rfloor \\fulfill 0$"),
+    c("$r_1 \\define s_1 \\mod b$", "$r_2 \\define s_2 \\mod b$", "", "$r_m \\define s_m \\mod b$")
+  )
+colnames(df1) <- c("Start","Integer part of division","Remainder")
+knitr::kable(
+  list(df1),
+  escape = FALSE,
+  booktabs = TRUE
+)
+```
+
+In Table 3.2 we illustrate how one is able to apply the *conversion scheme* method to convert the decimal number 363 into a base 2 number. The calculation steps: 
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+df1 <- data.frame(
+    c(363,181,90,45,22,11,5,2,1),
+    c(181,90,45,22,11,5,2,1,0),
+    c(1,1,0,1,0,1,1,0,1)
+  )
+colnames(df1) <- c("Start","Integer part of division","Remainder")
+knitr::kable(
+  list(df1),
+  escape = FALSE,
+  booktabs = TRUE
+)
+```
+
+The final result in base 2: $101\,101\,011$.
+
+### Base Conversions in R
+
+The package `sfsmisc` developed by Maechler et al. includes a user friendly method of converting numbers between bases within R.
+We load the necessary library `sfsmisc`
+```{r sfsmisc,eval=FALSE}
+library(sfsmisc)
+```
+
+```{r ,include=FALSE}
+<<sfsmisc>>
+```
+
+The function `digitsBase(s, base=b)` converts the number $s$ into a base $b$ number.
+```{r }
+# convert the number 450 from base 10 into base 8
+digitsBase(450, base=8)
+```
+
+The function `strtoi(d, base=b)` converts the number $d$ from base $b$ into base 10 number. 
+```{r }
+# convert the number 10101 from base 2 into base 10
+strtoi(10101, base=2) 
+```
+
+### Floating-Point Representation
+
+Floating-point representation is the formulaic representation used to *approximate real numbers* in computing. \ref{eq:equation1} illustrates the formula
+
+\begin{equation*} \label{eq:equation1}
+(-1)^\mathsf{sign} \cdot \mathsf{significand} \cdot \mathsf{base}^\mathsf{exponent}
+\end{equation*}.
+
+A number is represented by allocating a fixed number of bits (either 32 or 64) between the digits of the significand and the exponent. The more bits allocated to the significand, the greater the accuracy of the approximation. The more bits allocated to the exponent, the greater the range. This choice represents a trade-off between precision and range. For example, the floating-point representation of decimal numbers.
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+df1 <- data.frame( 
+  c("$256.78$","$\\rightarrow$", "$+2.5678 \\cdot 10^2$"),
+  c("$-256.78$", "$\\rightarrow$","$-2.5678 \\cdot 10^2$"),
+  c("$0.00365$","$\\rightarrow$","$+3.65 \\cdot 10^{-3}$")
+  )
+df1 <- t(df1)
+rownames(df1) <- NULL
+#colnames(df1) <- c("Start","Integer part of division","Remainder")
+knitr::kable(
+  list(df1),
+  escape = FALSE,
+  booktabs = TRUE,
+  col.names = NULL
+)
+```
+
+Very large and very small numbers are often written in *scientific notation* (also named *E notation*). For example
+${2.2e6} = 2.2 \cdot 10^6 = 2 200 000$, ${3.4e-2} = 0.034$. 
+
+
+
+### Limited Precision of Floating-Point Numbers
+
+Caution is advised using floating-point representation as its *limited precision* can lead to false results. In the following example we illustrate the limited precision and sometimes surprising results that can occur when using floating-point representation. 
+```{r }
+x <- 10^30 + 10^(-20)
+x - 10^30
+sin(pi) == 0
+3 - 2.9 == 0.1
+```
+
+### Limited Precision of Floating-Point Numbers
+
+In order to reduce the risk of such errors a number of safeguard measures can be employed. Firsly, one possible workaround is to use `round(x)` but this cuts all non-integer digits.
+```{r }
+round(sin(pi))
+```
+A preferred alternative is to *use a tolerance* for the comparison
+```{r }
+a <- 3 - 2.9
+b <- 0.1
+tol <- 1e-10
+abs(a - b) <= tol
+```
+Finally, large numbers can cause an *overflow*
+```{r }
+2*10^900
+```
+
+## Linear Algebra
+
+This is section, we introduce some basic yet essential operations in linear algebra. Including, vector and matrix properties and operations and how these can be implemented within R.  
+
+### Dot Product
+
+The *dot product* (or *scalar product*) is an algebraic operation, that multiplies two equal-sized vectors and returns a single number in the form of a scalar. The *dot product* is also an example of an inner product. The operation takes the sum of the products of the corresponding vector entries as defined by
+\begin{equation*}
+\vecval{a} \cdot \vecval{b} = \vecval{a}^T \vecval{b} = \sum\limits_{i=1}^n{a_i b_i} = a_1 b_1 + a_2 b_2 + \ldots + a_n b_n
+\end{equation*}
+with $\vecval{a} = \left[ a_1, a_2, \ldots, a_n \right]^T \in \R^n$ and $\vecval{b} = \left[ b_1, b_2, \ldots, b_n \right]^T \in \R^n$. 
+
+The centered dot $\cdot$ between the two vectors which signals the above defined operation also gives the operation its name: the *dot product*.
+
+The *dot product* operation can be implemented in R via the operator %*%. 
+```{r }
+A <- c(1, 2, 3)
+B <- c(4, 5, 6)
+
+
+# deletes dimensions which have only one value
+
+```
+
+### Properties of the Dot Product
+
+The *dot product* satisfies the following properties if $\vecval{a}$, $\vecval{b}$ and $\vecval{c}$ are real vectors and r is a scalar.   
+
+*Commutative:* the order of the objects does not change the result.    
+\begin{equation*}
+\vecval{a} \cdot \vecval{b} = \vecval{b} \cdot \vecval{a}
+\end{equation*}
+*Distributive over vector addition:* the multiplication of real numbers distributes over addition of real numbers. The same property applies in this case to the vectors. 
+\begin{equation*}
+\vecval{a} \cdot (\vecval{b} + \vecval{c}) = \vecval{a} \cdot \vecval{b} + \vecval{a} \cdot \vecval{c}
+\end{equation*}
+*Bilinear:* allows for operations where both operands are vectors.
+\begin{equation*}
+\vecval{a} \cdot (r \vecval{b} + \vecval{c}) = r   (\vecval{a} \cdot \vecval{b}) + \vecval{a} \cdot \vecval{b} \quad\text{with } r \in\R
+\end{equation*}
+*Scalar multiplication:* changes the lenght of the vector without changing its direction.
+\begin{equation*} 
+(r_1 \vecval{a}) \cdot (r_2 \vecval{b}) = r_1 r_2   (\vecval{a} \cdot \vecval{b}) \quad\text{with } r_1, r_2 \in\R
+\end{equation*}
+Two non-zero vector $\vecval{a}$ and $\vecval{b}$ are *orthogonal* if and only if $\vecval{a} \cdot \vecval{b} = 0$
+
+### Vector Norm
+
+The vector norm is function that is able to establish the length or magnitude of a vector in a vector space. The function assigns a strictly positive real number called a norm to the vector based on its size. The only exception is the zero vector which is assigned a length of zero.
+It is defined as $\norm{\cdot} \mapsto \R^{\geq 0}$ such that it has the following properties:
+
+Definiteness: every vector has a positive length; except the zero vector which has a length of zero. 
+$\norm{\vecval{x}} > 0$ if $\vecval{x} \neq \left[ 0, \ldots, 0 \right]^T$ and $\norm{\vecval{x}} = 0$ if and only if $\vecval{x} = \left[ 0, \ldots, 0 \right]^T$
+
+Positive homogeneity: the multiplication of a vector by a positive number changes its length without changing its direction.
+$\norm{r \vecval{x}} = \norm{r}   \norm{\vecval{x}}$ for any scalar $r \in \R$
+
+Triangle inequality: the shortest distance between any two points is a straight line.
+$\norm{\vecval{x} + \vecval{y}} \leq \norm{\vecval{x}} + \norm{\vecval{y}}$
+
+These definitions are highly abstract and many variants exits. The so-called *inner product* $\left\langle \vecval{a}, \vecval{b} \right\rangle$ is a generalization to abstract vector spaces over a field of scalars (e.g. $\mathbb{C}$).
+
+### Common Variants of Vector Norms
+
+There are many variations of vector norms. The selection of the appropriate norm is task dependent. Below we list the specific definitions of common variants of vector norms, all of which satisfy the above mentioned norm properties.  
+
+The *absolute-value norm* equals the absolute value. This norm can be applied on one-dimensional vector spaces formed by real or complex numbers. It is a special case of the *$L^1$-norm*.  
+\begin{equation*}
+\norm{x} = \abs{x} \quad \text{for } x \in\R
+\end{equation*}
+
+The *Euclidean* norm (or *$L^2$-norm*) is the intuitive notion of length drawn from the Pythagorean theorem. This corresponds to the ordinary notation of distance in two or three dimensions a from the orign to a given point. 
+\begin{equation*}
+\norm{\vecval{x}}_2 = \sqrt{\vecval{x} \cdot \vecval{x}} = \sqrt{x_1^2 + \ldots x_n^2}
+\end{equation*}
+
+The *Manhattan norm* (or *$L^1$-norm*) is the distance on a rectangular grid from the origin to a point x. 
+\begin{equation*}
+\norm{\vecval{x}}_1 = \sum_{i=1}^{n} \abs{x_i}
+\end{equation*}
+
+Their generalization is the *$p$-norm*. Where for $p$=1 we get the *$L^1$-norm*, $p$=2 we get the *$L^2$-norm* and as $p$ approaches infinity the *$p$-norm* approaches the infinity norm or maximum norm.    
+\begin{equation*}
+\norm{\vecval{x}}_p = \left( \sum_{i=1}^{n} \abs{x_i}^p \right)^{1/p} \quad \text{for } p \geq 1
+\end{equation*}
+
+### L1- vs. L2-Norm
+
+```{r fig.align="left", out.width="40%", echo=FALSE}
+# include_figure("euclidean_manhattan_distance.png")
+```
+
+Figure (need reference) illustrates the difference between the *$L^2$-norm* and *$L^1$-norm*. The blue line is the Euclidean distance and the black line is the Manhattan distance.
+
+#### Question {-}
+What is the distance $d = \text{bottom left }\rightarrow\text{ top right}$ in $L^1$- and $L^2$-norm?
+    - $\norm{d}_1 = 8$, $\norm{d}_2 = 16$
+    - $\norm{d}_1 = 8$, $\norm{d}_2 = \sqrt{32}$
+    - $\norm{d}_1 = \sqrt{32}$, $\norm{d}_2 = 8$
+- TODO Pingo
+
+### Vector Norms in R
+There is no default built-in function for calculating vector norms within R. Therefore, we illustrate how instead we can *calculate the $L^1$- and $L^2$-norm manually*.
+```{r }
+x <- c(1, 2, 3)
+sum(abs(x)) # L1-norm
+sqrt(sum(x^2)) # L2-norm
+```
+The $p$-norm can be calculated manually as follows.
+```{r }
+(sum(abs(x)^3))^(1/3) # 3-norm
+```
+
+### Scalar Multiplication
+Scalar multiplication is a basic matrix operation. A vector $x$ is multiplied by a constant $\lambda$. The result: is a vector $x\lambda$ which retains the same direction as the vector $x$ but with a different length by a factor $\lambda$. In the case of the matrix; a scalar multiplication by a constant $\lambda$ of a matrix $A$ results in a matrix $A\lambda$ of the same size. The operation multiplies all the original components of the vector or matrix by the scalar in order to obtain the new object.
+\begin{equation*}
+\lambda \vecval{x} =
+\vecval{x} \lambda = 
+\begin{bmatrix}
+\lambda x_1 \\
+\vdots \\
+\lambda x_n
+\end{bmatrix}
+\qquad
+\lambda A = 
+A \lambda = 
+\begin{bmatrix}
+\lambda a_{11} & \cdots & \lambda a_{1m} \\
+\vdots & \ddots & \vdots \\
+\lambda a_{n1} & \cdots & a_{nm}
+\end{bmatrix}
+\end{equation*}
+
+Scalar multiplication is easily implemented in R via the default *default multiplication operator* `*`.
+```{r ,size='scriptsize'}
+5*c(1, 2, 3)
+m <- matrix(c(1,2, 3,4, 5,6), ncol=3)
+m
+5*m
+```
+
+### Transpose
+The *transpose of a matrix* $A$ is another matrix $A^T$ where the *values in columns and rows are flipped*. Transpose operations are useful in order to reveal certain properties about a matrix. Such as, if a matrix $A$ equals its transpose $A^T$ we can assume that the matrix is symmetric. 
+\begin{equation*}
+A^T \define [a_{ji}]_{ij}
+\end{equation*}
+
+For example, 
+
+$\begin{bmatrix}
+1 & 3 & 5 \\
+2 & 4 & 6
+\end{bmatrix}^T = \begin{bmatrix}
+1 & 2 \\
+3 & 4 \\
+5 & 6 \end{bmatrix}$.
+
+Transpose operations can easily be implemented within R using the command `t(A)`.
+```{r ,size='scriptsize'}
+m
+t(m)
+```
+
+### Matrix-by-Vector Multiplication
+Matrix multiplication is a binary operation that results in a matrix-vector product from the multiplication of a matrix and a vector. The operation only holds for the case; where the number of columns in matrix $A$ equal the number of rows in the vector $x$. If matrix $A$ is a $m$x$n$ matrix and vector $x$ is $n$x$1$ vector, then the product $Ax$ is a $m$x$1$ column vector. Therefore, the number of rows $m$ in $A$ determines the numbers of rows $m$ in the product $Ax$. To compute the individual components of the matrix-vector product $Ax$: simply takes the *dot product* of $x$ with each row of $A$.
+
+\begin{equation*}
+  A \vecval{x} =
+  \left[
+    \begin{array}{cccc}
+      a_{11} & a_{12} & \ldots & a_{1m}\\
+      a_{21} & a_{22} & \ldots & a_{2m}\\
+      \vdots & \vdots & \ddots & \vdots\\
+      a_{n1} & a_{n2} & \ldots & a_{nm}
+    \end{array}
+  \right]
+  \left[
+    \begin{array}{c}
+      x_1\\
+      x_2\\
+      \vdots\\
+      x_n
+    \end{array}
+  \right]
+  =
+  \left[
+    \begin{array}{c}
+      a_{11}x_1+a_{12}x_2 + \cdots + a_{1m} x_n\\
+      a_{21}x_1+a_{22}x_2 + \cdots + a_{2m} x_n\\
+      \vdots\\
+      a_{n1}x_1+a_{n2}x_2 + \cdots + a_{nm} x_n\\
+    \end{array}
+  \right] 
+\end{equation*}
+with $A \in\R^{n \times m}$, $\vecval{x} \in\R^{n}$ and $A\vecval{x} \in\R^n$
+
+The implementation of matrix-vector multiplication is achieved by using the operator %*% in R.
+```{r }
+
+```
+
+
+
+### Element-Wise Matrix Multiplication
+Element-wise multiplication also known as the Hadamard Product is a binary operation whose product is a matrix $c$ with the elements $c_{ij}$. Where $c_{ij}$ is the product of the element $i$ of matrix $a$ and element $j$ of matrix $b$ and where the matrices $a$ and $b$ are of the same dimensions. The element-wise multiplication of matrices $A \in\R^{n \times m}$ and $B \in\R^{n \times m}$, return a matrix $C \in\R^{n \times m}$. 
+\begin{equation*}
+c_{ij} = a_{ij} b_{ij}
+\end{equation*}
+The implementation in R is straight forward the default multiplication operator `*` performs an *element-wise multiplication* of two matrix objects. 
+```{r }
+m
+m*m
+```
+
+
+
+### Matrix-by-Matrix Multiplication
+*Matrix multiplication* is a general case of the matrix-vector multiplication. Given the matrix $A \in\R^{n \times m}$ and the matrix $B \in\R^{m \times l}$, the application of *matrix multiplication* results in the matrix $C = AB \in\R^{n \times l}$.
+\begin{equation*}
+c_{ij} = \sum_{k=1}^{m} a_{ik} b_{kj}
+\end{equation*}
+The product matrix $C$ is defined only if the number of columns in matrix $A$ equal the number of rows in matrix $B$. For example, the product of a $m$x$n$ matrix $A$ and a $n$x$p$ matrix $B$ would be a $m$x$p$ matrix $C$. *Matrix multiplication* can easily be implemented in R using the operator %*%. 
+```{r ,size='scriptsize'}
+m
+```
+
+```{r ,size='scriptsize'}
+t(m)
+```
+
+```{r ,size='scriptsize'}
+m %*% t(m)
+```
+
+
+### Identity Matrix
+The *identity matrix* (or *unit matrix*) is the simplest nontrivial diagonal matrix. It is a square matrix with $1$'s on the diagonal and $0$'s elsewhere. See \ref{eq:identity}. 
+\begin{equation*} \label{eq:identity}
+I_n = \diag(1, 1, \ldots, 1) \in\R^{n \times n}
+\end{equation*}
+Further, the identity matrix $A \in\R^{n \times m}$ is defined such that 
+\begin{equation*}
+I_n A = A I_m = A
+\end{equation*}.
+
+The command `diag(n)` creates an identity matrix object in R of a size $n \times n$.
+```{r }
+diag(3)
+```
+
+### Matrix Inverse
+The *inverse* of a square matrix $A$ is a matrix $A^{-1}$ such that 
+\begin{equation*}
+A A^{-1} = I
+\qquad
+\text{(note that generally this is $\neq A^{-1} A$)}
+\end{equation*}
+A square matrix has an inverse *if and only if its determinant $\det A \neq 0$*. Further, the direct calculation is *numerically highly unstable*, and thus we can rewrite the problem to *solve a system of linear equations*. The command `solve()` calculates the inverse $A^{-1}$ of a square matrix $A$ within R.
+```{r message=FALSE,warning=FALSE}
+sq.m <- matrix(c(1,2, 3,4), ncol=2)
+sq.m
+solve(sq.m)
+
+```
+
+### Pseudoinverse
+The *pseudoinverse* matrix $A^+ \in\R^{m \times n}$ is a *generalization* of the inverse of a matrix $A \in\R^{n \times m}$; fulfilling among others the following condition.
+\begin{equation*}
+A A^+ = I
+\end{equation*}
+The command `ginv(A)` from the package `MASS` calculates the pseudoinverse within R. 
+```{r MASS,eval=FALSE,size='scriptsize'}
+library(MASS)
+```
+
+```{r ,include=FALSE,size='scriptsize'}
+<<MASS>>
+```
+
+```{r ,size='scriptsize'}
+ginv(m)
+```
+
+If $A A^+$ is invertible, it is given by 
+\begin{equation*}
+A^+ \define A^T \left(A A^T \right)^{-1}
+\end{equation*}.
+
+### Determinant
+The *determinant* $\det A$ of a square matrix is a useful object for analyzing and solving systems of liner equations. The $\det A$ can easily be calculated from the elements of a square matrix $A$, relating to e.g. the region it spans. A square matrix is also invertible if and only if $\det A \neq 0$.
+
+To *calculate* the determinant of the $2 \times 2$ matrix $A$ we apply the following formula 
+\begin{equation*} 
+\det A = \begin{vmatrix} a_{11} & a_{12} \\
+a_{21} & a_{22} \end{vmatrix} = a_{11} a_{22} - a_{12} a_{21}
+\end{equation*}.
+This rule can be expanded for the case of a $3 \times 3$ matrix. For all other case one usually utilizes the *Leibniz or the Laplace formula*.
+
+To calculate the determinant in R one applies the following command `det(A)`.
+```{r }
+det(sq.m)
+```
+
+### Eigenvalues and Eigenvectors
+
+In the general case vectors will change direction under a linear transformation by the square matrix $A$. The *eigenvector* $\vecval{v}$ of a square matrix $A$ is a *vector that does not change its direction under the linear transformation* by $A \in \R^{n \times n}$. If we multiply an eigenvector by $A$ then the vector $Av$ is simply $\lambda$ times the original $v$. Where $\lambda \in\R$ is the *eigenvalue* associated with the eigenvector $\vecval{v}$ as defined in \ref{eq:eigenvector}. 
+\begin{equation*} \label{eq:eigenvector}
+A \vecval{v} = \lambda \vecval{v} \qquad \text{for } \vecval{v} \neq \left[ 0, \ldots 0 \right]^T \in\R^{n}
+\end{equation*}
+
+In the following example we illustrate the eigenvalues and eigenvectors for the following matrix
+
+$A = \begin{bmatrix}
+2 & 0 & 1 \\
+0 & 2 & 0 \\
+1 & 0 & 2
+\end{bmatrix}$
+
+\begin{equation*}
+\lambda_1 = 1, \vecval{v}_1 = \begin{bmatrix} 1 \\ 0 \\ -1 \end{bmatrix},
+\quad
+\lambda_2 = 2, \vecval{v}_2 = \begin{bmatrix} 0 \\ 1 \\ 0 \end{bmatrix},
+\quad
+\lambda_3 = 3, \vecval{v}_3 = \begin{bmatrix} 1 \\ 0 \\ 1 \end{bmatrix}
+\end{equation*}
+
+### Eigenvalues and Eigenvectors
+
+The linear transformation of the eigenvector $v$ by the square matrix $A$ can be illustrated via a *geometric interpretation*. The matrix $A$ *stretches* the vector $\vecval{v}$ but does *not change its direction*. Therefore, the vector $\vecval{v}$ is an eigenvector of $A$. 
+
+```{r fig.align="center", out.width="80%", echo=FALSE}
+include_figure("eigenvalue_equation.png")
+```
+
+### Eigenvalues and Eigenvectors
+
+#### Question {-}
+In order to solidify your knowledge please complete the following example on your own. The answer can be found online at the Pingo. 
+Given $A = \begin{bmatrix}
+1 & 0 & 0 \\
+1 & 2 & 0 \\
+2 & 3 & 3
+\end{bmatrix}$
+Which of the following is not an eigenvector/eigenvalue pair?
+
+    - $\lambda_1 = 1$, $\vecval{v}_1 = \begin{bmatrix} \frac{2}{3} \\ -\frac{2}{3} \\ \frac{1}{3} \end{bmatrix}$
+    - $\lambda_2 = 2$, $\vecval{v}_2 = \begin{bmatrix} 2 \\ 1 \\ 1 \end{bmatrix}$
+    - $\lambda_3 = 3$, $\vecval{v}_3 = \begin{bmatrix} 0 \\ 0 \\ 1 \end{bmatrix}$
+TODO Pingo
+
+### Eigenvalues and Eigenvectors in R
+Eigenvalues and eigenvectors of a square matrix $A$ can be calculated in R using the function `eigen(A)`.
+```{r }
+sq.m
+e <- eigen(sq.m)
+e$val # eigenvalues
+e$vec # eigenvectors
+```
+
+### Definiteness of Matrices
+
+The *definiteness* of a matrix helps determine the *nature of optima* and can be defined as follows: 
+The *symmetric* matrix $A \in\R^{n \times n}$ is *positive definite* if
+    \begin{equation*}
+    \vecval{x}^T A \vecval{x} > 0 \quad\text{for all } \vecval{x} \neq \left[0, \ldots, 0\right]^T
+    \end{equation*}
+The *symmetric* matrix $A \in\R^{n \times n}$ is *positive semi-definite* if
+    \begin{equation*}
+    \vecval{x}^T A \vecval{x} \geq 0 \quad\text{for all } \vecval{x} \neq \left[0, \ldots, 0\right]^T
+    \end{equation*} 
+
+In the following example we illustrate that the identity matrix $I$ is positive definite.
+
+$I_2 = \begin{bmatrix}
+1 & 0 \\
+0 & 1 
+\end{bmatrix}$
+
+\begin{equation*}
+\vecval{x}^T I_2 \vecval{x} = \left[ z_1 z_2 \right]
+\begin{bmatrix}
+1 & 0 \\
+0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+z_1 \\
+z_2
+\end{bmatrix}
+= z_1^2 + z_2^2 > 0 \text{ for all } \vecval{z} \neq \left[ 0, 0 \right]^T
+\end{equation*}
+
+### Positive Definiteness
+There are multiple *tests* which can be used to determine if the symmetric matrix $A$ is positive definite. The first option would be to evaluate $\vecval{x}^T A \vecval{x}$ for all $\vecval{x}$, this can be rather impractical. An alternative  solution is to check if all eigenvalues $\lambda_i$ of $A$ are positive. Finally, one could check if all upper-left sub-matrices have positive determinants (Sylvester's criterion).
+
+### Definiteness Tests in R
+
+The library `matrixcalc` within R is able to determine all variants of definiteness for a given matrix.
+```{r matrixcalc,eval=FALSE}
+library(matrixcalc)
+```
+
+```{r ,include=FALSE}
+<<matrixcalc>>
+```
+
+```{r ,size='scriptsize'}
+I <- diag(3)
+I
+is.negative.definite(I)
+is.positive.definite(I)
+```
+
+```{r ,size='scriptsize', tidy=FALSE}
+C <- matrix(c(-2,1,0, 1,-2,1, 0,1,-2), 
+            nrow=3, byrow=TRUE)
+C
+is.positive.semi.definite(C)
+is.negative.semi.definite(C)
+```
+
+## Differentiation
+In this section we will review differentiation i.e. the process of estimating derivates which are fundamental tool of calculus. Derivatives play an equally important role in many computational methods.    
+
+### Differentiability
+
+A function of a real variable is said to be differentiable function if at each point in its domain a derivative exists at that point. Let $f : D \subseteq \R^n \rightarrow \R$ be a function and $x_0 \in D$. If $x_0$ is a point in the domain of function $f$, then the function $f$ is *differentiable at the point $x_0$* if the following limit exists
+\begin{equation*}
+f'(x_0) = \frac{\dd f}{\dd x}(x_0) = \lim_{\varepsilon \to 0}\frac{f(x_0 + \varepsilon) - f(x_0)}{\varepsilon}
+\end{equation*}
+the limit $f'(x_0)$ is called the *derivative of $f$ at the point $x_0$*. If the function $f$ is differentiable for all $x \in D$, then the function $f$ is *differentiable* and has the *derivative $f'$*. Further, the second derivative of the function $f$ is denoted $f''$  and by induction, the *$n$-th* derivative is denoted $f^{(n)}$. Geometrically, the derivative $f'(x_0)$ of the function $f(x)$ at the point $x_0$ is the *slope of the tangent* to the function $f(x)$ at the point $x_0$.
+
+Figure \ref{fig:differentiable} illustrate graphical examples of both a differentiable and non-differentiable functions.  
+
+```{r fig.align="center", fig.cap="Continuous, differentiable", out.width="60%", echo=FALSE}
+include_figure("continuous.png") 
+```
+
+```{r fig.align="center", fig.cap="Continuous, not differentiable", out.width="60%", echo=FALSE}
+include_figure("non-differentiable_continuous.png")
+```
+
+```{r fig.align="center", fig.cap="Discontinuous, not differentiable", out.width="60%", echo=FALSE}
+include_figure("non-differentiable_discontinuous.png")
+```
+
+#### Question {-}
+What is correct for the function $f(x) = \frac{2x-1}{x+2}$?
+    - Continuous and differentiable
+    - Continuous but not differentiable
+    - Discontinuous and not differentiable
+- TODO Pingo
+
+### Chain Rule
+The *chain rule* is a method for computing the derivative of a composite function of two of more functions. Let $v(x)$ be a differentiable function, then the *chain rule* gives
+\begin{equation*}
+\frac{\dd u(v(x))}{\dd x} = \frac{\dd u}{\dd x} = \frac{\dd u}{\dd v} \frac{\dd v}{\dd t} 
+\end{equation*}
+
+An easy example illustrating the application of the *chain rule*. Given $u(v(x)) = \sin{\pi vx}$, then 
+\begin{equation*}
+\frac{\dd u(v(x))}{\dd x} = \frac{\dd \sin{\pi v}}{\dd x} \frac{\dd (\pi vx)}{\dd x} = \cos{(\pi vx)} \pi v
+\end{equation*}
+
+#### Question {-}
+What is the derivative of $\log{4-x}$?
+    - $\frac{1}{x-4}$
+    - $\frac{4}{x}$
+    - $\frac{1}{4-x}$
+- TODO Pingo
+
+### Partial Derivative
+The partial derivative of a composite function is the derivative with respect to one function while the remaining functions are held constant. As opposed to the total derivative in which all functions are variable. The *partial derivative* with respect to $x_i$ is given by 
+\begin{equation*}
+\frac{\partial f}{\partial x_i}(\vecval{x}) \define \lim_{\varepsilon \to 0} \frac{f(x_1, \ldots, x_i + \varepsilon, \ldots, x_n) - f(x_1, \ldots, x_i, \ldots, x_n)}{\varepsilon}
+\end{equation*}
+The function $f$ is called *partially differentiable*, if the function $f$ is differentiable at *each* point with respect to *all* variables. Partial derivatives can be *exchanged in their order* such that
+\begin{equation*}
+\frac{\partial}{\partial x_i} \left( \frac{\partial f}{\partial x_j} \right) = \frac{\partial}{\partial x_j} \left( \frac{\partial f}{\partial x_i} \right)
+\end{equation*}.
+
+### Derivatives in R
+To calculate derivatives within R we apply the function `D(f, "x")` which *derives an expression for the function $f$ symbolically*.
+```{r }
+f <- expression(x^5 + 2*y^3 + sin(x) - exp(y))
+
+D(f, "x")
+D(D(f, "y"),"y")
+D(D(f, "x"),"y")
+```
+In order to *compute the derivative at a specific point*, we apply the function `eval(expr)`.
+```{r }
+eval(D(f, "x"), list(x=2, y=1))
+```
+
+
+### Finite Differences
+Finite-difference methods are a numerical method for solving differential equations by approximating derivatives numerically using finite differences. 
+
+```{r fig.align="center", out.width="60%", echo=FALSE}
+include_figure("finite_difference_approximation.png")
+``` 
+
+There are three main finite difference methods. Where $h$ is the *step size* $h$, usually of order $10^{-6}$.
+
+    - *Forward* differences
+    \begin{equation*}
+    f'(x) = \frac{f(x + h) - f(x)}{h}
+    \end{equation*}
+    - *Backward* differences
+    \begin{equation*}
+    f'(x) = \frac{f(x) - f(x - h)}{h}
+    \end{equation*}
+    - *Centered* differences
+    \begin{equation*}
+    f'(x) = \frac{f(x + h) - f(x - h)}{2h}
+    \end{equation*}
+    
+### Higher-Order Differences
+Analog to the method set out previously we can also derive finite-difference approximations for higher order derivatives. Building on the previously mentioned formulae we can derive the *2nd order central differences*
+\begin{align*}
+f''(x) \approx & \frac{f'(x+h) - f'(x)}{h} \\
+\approx & \frac{\cfrac{f(x+h)-f(x)}{h} - \cfrac{f(x)-f(x-h)}{h}}{h} \\
+= & \frac{f(x+h) - 2f(x) + f(x-h)}{h^2}.
+\end{align*}
+
+### Finite Differences in R
+
+Finite-differences can be calculated within R. As illustrated in the following example. 
+
+#### Question {-}
+
+- Given $f(x) = \sin{x}$
+- Set `h <- 10e-6`
+- How to calculate the derivative at $x = 2$ with centered differences in R?
+    - `(sin(2+h) - sin(2-h)) / (2*h)`
+    - `(sin(2+h) - sin(2-h)) / 2*h`
+    - `(sin(2+h) - sin(2)) / (2*h)`
+- TODO Pingo
+
+### Gradient and Hessian Matrix
+The *gradient* of a function $f$ is a vector operator whose elements are the $n$ partial derivatives of the function $f$. More generally, it is simply the slope of a tangent to the function $f$ at a given point. The *gradient* of $f : \R^n \rightarrow \R^n$
+\begin{equation*}
+\nabla f(\vecval{x}) = 
+\begin{bmatrix} \cfrac{\partial f}{\partial x_1}(\vecval{x}) \\
+\vdots \\
+\cfrac{\partial f}{\partial x_n}(\vecval{x})
+\end{bmatrix}
+\end{equation*}
+
+The *Hessian Matrix* is a square matrix whose elements are the second-order partial derivatives of the function $f$. The *Hessian matrix* can be used to describe local curvature of the function $f$. Since the order of derivatives can be exchanged, the Hessian $H(\vecval{x})$ is *symmetric*
+i.e. $H(\vecval{x}) = \left( H(\vecval{x}) \right)^T$
+
+\begin{equation*}
+H(\vecval{x}) = \nabla^2 f(\vecval{x}) = 
+\begin{bmatrix}
+\frac{\partial^2 f}{\partial x_1^2}(\vecval{x}) & \cdots & \frac{\partial^2 f}{\partial x_1 \partial x_n}(\vecval{x}) \\
+\vdots & \ddots & \vdots \\
+\frac{\partial^2 f}{\partial x_n \partial x_1}(\vecval{x}) & \cdots & \frac{\partial^2 f}{\partial x_n^2}(\vecval{x})
+\end{bmatrix}
+\end{equation*}
+
+
+### Hessian Matrix in R
+
+To estimate the hessian matrix for the function $f$ we call the command `optimHess(x, f, ...)` within R. The code `optimHess(x, f, ...)` applies forward difference method to approximate the Hessian Matrix of $f(x_1, x_2)$ at a given point $(x_1, x_2)=(3,2)$ with a given step size $h=0.0001$. 
+```{r }
+f <- function(x) (x[1]^3*x[2]^2 - x[2]^2 + x[1])
+optimHess(c(3, 2), f, control=(ndeps=0.0001))
+```
+
+
+
+## Taylor Approximation
+
+### Taylor Series
+The *Taylor Theorem* states: assuming a function is continuous and *infinitely differentiable* it can be represented by the *Taylor series*. The series approximates the function $f$ around a given point $x_0$ using the *Taylor polynomial* as a power series. The representation is derived from the derivatives of the function $f$ around the point $x_0$ as illustrated in \ref{eq:taylor}. Practically, to *obtain an approximation* of the function $f$ we can cut off the series after an order $n$. If $x_0=0$ the series is also called *Maclaurin series*.
+\begin{align*} \label{eq:taylor}
+f(x) &= f(x_0)+\frac{f'(x_0)}{1!}(x-x_0)+\frac{f''(x_0)}{2!}(x-x_0)^2\\
+& \qquad\qquad\qquad
++\frac{f'''(x_0)}{3!}(x-x_0)^3+\ldots \\
+&= \sum\limits_{n=0}^\infty{\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n}.
+\end{align*}
+  
+
+### Taylor Approximation
+The Taylor approximation of order $n$ depicted in blue around the point $x_0 = 0$ for the function $f(x) = \sin{x}$ depicted in gray. 
+```{r taylor1_sin,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last', message=FALSE, warning=FALSE, echo=FALSE}
+library(pracma)
+
+f <- function(x) sin(x)
+x0 <- 0
+x <- seq(-10, 10, by=0.01)
+y.f <- f(x)
+
+o <- 1
+  taylor.poly <- taylor(f, x0=x0, n=o)
+  y.taylor <- polyval(taylor.poly, x)
+  plot(x, y.f, type = "l", col = "gray", lwd = 3, ylim=c(-10, +10), main=paste("n=", o, sep=""), ylab="f(x)")
+  lines(x, y.taylor, col = "darkblue")
+	points(x0, f(x0), pch=16, col="black")
+  #grid()
+```
+
+```{r taylor3_sin,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last', message=FALSE, warning=FALSE, echo=FALSE}
+library(pracma)
+
+f <- function(x) sin(x)
+x0 <- 0
+x <- seq(-10, 10, by=0.01)
+y.f <- f(x)
+
+o <- 3
+  taylor.poly <- taylor(f, x0=x0, n=o)
+  y.taylor <- polyval(taylor.poly, x)
+  plot(x, y.f, type = "l", col = "gray", lwd = 3, ylim=c(-10, +10), main=paste("n=", o, sep=""), ylab="f(x)")
+  lines(x, y.taylor, col = "darkblue")
+	points(x0, f(x0), pch=16, col="black")
+  #grid()
+```
+
+```{r taylor11_sin,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last', message=FALSE, warning=FALSE, echo=FALSE}
+library(pracma)
+
+f <- function(x) sin(x)
+x0 <- 0
+x <- seq(-10, 10, by=0.01)
+y.f <- f(x)
+
+o <- 11
+  taylor.poly <- taylor(f, x0=x0, n=o)
+  y.taylor <- polyval(taylor.poly, x)
+  plot(x, y.f, type = "l", col = "gray", lwd = 3, ylim=c(-10, +10), main=paste("n=", o, sep=""), ylab="f(x)")
+  lines(x, y.taylor, col = "darkblue")
+	points(x0, f(x0), pch=16, col="black")
+  #grid()
+```
+
+
+### Taylor Approximation
+The Taylor approximation varies as the degree of the polynomial rises i.e. as the order $n$ increases. As the order increases the Taylor approximation converges to the true function $f$. This illustrated in the following figures (need references). As $n$ increases from $1$ to $11$ the Taylor approximation depicted in blue around the point $x_0 = 0$ converges to the function $f(x) = \mathsf{e}^x$ depicted by the gray line.  
+```{r taylor1_e,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last', message=FALSE, warning=FALSE, echo=FALSE}
+library(pracma)
+
+f <- function(x) exp(x)
+x0 <- 0
+x <- seq(-2.5, 2.5, by=0.01)
+y.f <- f(x)
+
+o <- 1
+  taylor.poly <- taylor(f, x0=x0, n=o)
+  y.taylor <- polyval(taylor.poly, x)
+  plot(x, y.f, type = "l", col = "gray", lwd = 3, ylim=c(-5, +20), main=paste("n=", o, sep=""), ylab="f(x)")
+  lines(x, y.taylor, col = "darkblue")
+	points(x0, f(x0), pch=16, col="black")
+```
+
+```{r taylor3_e,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last', message=FALSE, warning=FALSE, echo=FALSE}
+library(pracma)
+
+f <- function(x) exp(x)
+x0 <- 0
+x <- seq(-2.5, 2.5, by=0.01)
+y.f <- f(x)
+
+o <- 3
+  taylor.poly <- taylor(f, x0=x0, n=o)
+  y.taylor <- polyval(taylor.poly, x)
+  plot(x, y.f, type = "l", col = "gray", lwd = 3, ylim=c(-5, +20), main=paste("n=", o, sep=""), ylab="f(x)")
+  lines(x, y.taylor, col = "darkblue")
+	points(x0, f(x0), pch=16, col="black")
+```
+
+```{r taylor8_e,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last', message=FALSE, warning=FALSE, echo=FALSE}
+library(pracma)
+
+f <- function(x) exp(x)
+x0 <- 0
+x <- seq(-2.5, 2.5, by=0.01)
+y.f <- f(x)
+
+o <- 8
+  taylor.poly <- taylor(f, x0=x0, n=o)
+  y.taylor <- polyval(taylor.poly, x)
+  plot(x, y.f, type = "l", col = "gray", lwd = 3, ylim=c(-5, +20), main=paste("n=", o, sep=""), ylab="f(x)")
+  lines(x, y.taylor, col = "darkblue")
+	points(x0, f(x0), pch=16, col="black")
+```
+
+
+### Taylor Approximation
+A further example of the impact on increasing the order of approximation $n$ depicted in blue around $x_0=0$ for the function $f(x) = \log{x+1}$ depicted in gray. 
+
+```{r taylor1_log,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last', message=FALSE, warning=FALSE, echo=FALSE}
+library(pracma)
+
+f <- function(x) log(x+1)
+x0 <- 0
+x <- seq(-1.5, 1.5, by=0.01)
+y.f <- f(x)
+
+o <- 1
+  taylor.poly <- taylor(f, x0=x0, n=o)
+  y.taylor <- polyval(taylor.poly, x)
+  plot(x, y.f, type = "l", col = "gray", lwd = 3, ylim=c(-4, +2), main=paste("n=", o, sep=""), ylab="f(x)")
+  lines(x, y.taylor, col = "darkblue")
+	points(x0, f(x0), pch=16, col="black")
+```
+
+```{r taylor3_log,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last', message=FALSE, warning=FALSE, echo=FALSE}
+library(pracma)
+
+f <- function(x) log(x+1)
+x0 <- 0
+x <- seq(-1.5, 1.5, by=0.01)
+y.f <- f(x)
+
+o <- 3
+  taylor.poly <- taylor(f, x0=x0, n=o)
+  y.taylor <- polyval(taylor.poly, x)
+  plot(x, y.f, type = "l", col = "gray", lwd = 3, ylim=c(-4, +2), main=paste("n=", o, sep=""), ylab="f(x)")
+  lines(x, y.taylor, col = "darkblue")
+	points(x0, f(x0), pch=16, col="black")
+```
+
+```{r taylor11_log,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last', message=FALSE, warning=FALSE, echo=FALSE}
+library(pracma)
+
+f <- function(x) log(x+1)
+x0 <- 0
+x <- seq(-1.5, 1.5, by=0.01)
+y.f <- f(x)
+
+o <- 11
+  taylor.poly <- taylor(f, x0=x0, n=o)
+  y.taylor <- polyval(taylor.poly, x)
+  plot(x, y.f, type = "l", col = "gray", lwd = 3, ylim=c(-4, +2), main=paste("n=", o, sep=""), ylab="f(x)")
+  lines(x, y.taylor, col = "darkblue")
+	points(x0, f(x0), pch=16, col="black")
+```
+
+
+
+### Taylor Series
+
+#### Question {-}
+
+- What is the Taylor series for $f(x) = \cfrac{1}{1-x}$ with $x_0 = 0$?
+    - $f(x) = \frac{1}{x} + 1 + x + x^2 + x^3 + \ldots$
+    - $f(x) = 1 + x + x^2 + x^3 + \ldots$
+    - $f(x) = x + x^2 + x^3 + \ldots$
+- TODO Pingo
+
+#### Question {-}
+
+- What is the Taylor series for $f(x) = \mathsf{e}^{x}$ with $x_0 = 0$?
+    - $f(x) = \frac{x}{1!} + \frac{x^2}{2!} + \frac{x^3}{3!} + \ldots$
+    - $f(x) = 1 + \frac{x}{1} + \frac{x^2}{2} + \frac{x^3}{3} + \ldots$
+    - $f(x) = 1 + \frac{x}{1!} + \frac{x^2}{2!} + \frac{x^3}{3!} + \ldots$
+- TODO Pingo
+
+### Taylor Approximation with R
+The Taylor approximation is easily implemented in R using the `pracma` package.
+```{r pracma,eval=FALSE,size='scriptsize'}
+library(pracma)
+```
+```{r ,include=FALSE,size='scriptsize'}
+<<pracma>>
+```
+Using the command `taylor(f, x0, n)` we are able to calculate the *Taylor approximation* up to a degree of $n=4$. 
+```{r ,size='scriptsize'}
+f <- function(x) cos(x)
+taylor.poly <- taylor(f, x0=0, n=4)
+taylor.poly
+```
+
+To evaluate the accuracy of the Taylor approximation at a given point within R. We use the command `polyval(p, x)`. Where `p` represents the taylor approximation and $x$ denotes the point at which we wish to evaluate the approximation. 
+```{r ,size='scriptsize'}
+polyval(taylor.poly, 0.1) # x = 0.1
+cos(0.1) # for comparison
+polyval(taylor.poly, 0.5) - cos(0.5)
+```
+
+
+
+### Taylor Approximation in R
+We are also able use R to visualize the Taylor approximation.
+```{r plot_taylor,fig.width=6,fig.height=4,out.width='70%',size='scriptsize',tidy=FALSE,fig.keep='last'}
+x <- seq(-7.0, 7.0, by=0.01)
+y.f <- f(x)
+y.taylor <- polyval(taylor.poly, x)
+plot(x, y.f, type="l", col="gray", lwd=2, ylim=c(-1, +1))
+lines(x, y.taylor, col="darkblue")
+grid()
+```
+

@@ -1,0 +1,19 @@
+bookdown::gitbook:
+  includes:
+    in_header: macros.html
+  css: style.css
+  config:
+    toc:
+      before: |
+        <li><a href="./">Operations Research in R</a></li>
+      after: |
+        <li><a href="https://is.uni-freiburg.de/" target="blank">Information Systems Research, University of Freiburg</a></li>
+    edit: no
+    sharing: no
+bookdown::pdf_book:
+  includes:
+    in_header:
+    #- tex/preamble.tex 
+    - tex/macros.tex
+  latex_engine: pdflatex
+  citation_package: natbib

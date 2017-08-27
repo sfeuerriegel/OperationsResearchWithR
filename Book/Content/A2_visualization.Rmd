@@ -1,0 +1,167 @@
+# (APPENDIX) Visualization in R {#visualization}
+
+## Point Plot
+
+- Creating simple point plots (also named scatter plots) via `plot(...)`
+- Relies upon vectors denoting the x-axis and y-axis locations
+- Various options can be added to change appearance
+
+```{r pointplot,out.width='\\textwidth',dpi=50,echo=-1,tidy=FALSE,size='scriptsize'}
+setwd("../../Exercise/Datasets/AdvancedR/")
+d <- read.csv("persons.csv", header=TRUE, sep=",", 
+              stringsAsFactors=FALSE)
+plot(d$height, d$age)
+```
+
+## Adding Title, Labels and Annotations
+
+- Title is added through additional parameter `main`
+- Axis labels are set via `xlab` and `ylab`
+- Annotations next to points with `text(...)`
+
+```{r pointplot-with-labels,out.width='.8\\textwidth',fig.keep='last',dpi=50,tidy=FALSE}
+plot(d$height, d$age, 
+     main="Title",              # title for the plot 
+     xlab="Height", ylab="Age") # labels for x and y axis
+text(d$height, d$age, d$name) # d$name are annotations
+```
+
+## Line Plot
+
+Generate line plot using the additional option `type="l"`
+
+```{r lineplot,out.width='\\textwidth',fig.keep='last',dpi=50}
+x <- seq(0, 4, 0.01)
+plot(x, x*x, type="l")
+```
+
+## Exercise: Plotting
+
+```{r exercise_plotting_x,eval=FALSE}
+x <- seq(-1, +1, 0.01)
+```
+
+```{r ,include=FALSE}
+<<exercise_plotting_x>>
+```
+
+```{r exercise_plotting,out.width='.5\\textwidth',fig.keep='last',dpi=50,echo=FALSE}
+plot(x, abs(x), type="l", ylab="", xlab="")
+```
+
+### Question
+- How would you reproduce the above plot?
+    - `plot(x, kink(x), type="l", main="")`
+    - `plot(x, kink(x), type="l", lab="")`
+    - `plot(x, abs(x), type="l", ylab="", xlab="")`
+- Pingo? TODO
+
+## 3D Plots
+
+- Consider the function $f(x,y) = x^3 + 3y - y^3 - 3x$
+
+```{r }
+f <- function(x, y) x^3+3*y-y^3-3*x
+```
+
+- Create axis ranges for plotting
+
+```{r }
+x <- seq(-5, 5, 0.1)
+y <- seq(-5, 5, 0.1)
+```
+
+- Function `outer(x,y,f)` evaluates `f` all combinations of `x` and `y`
+
+```{r }
+z <- outer(x, y, f)
+```
+
+## 3D Plots
+
+Function `persp(...)` plots the plane through `x`, `y` and `z` in 3D
+
+```{r persp_plot,size='scriptsize',out.width='.7\\textwidth',fig.width=6,fig.height=6}
+persp(x, y, z)
+```
+
+Turn on ticks on axes via `ticktype="detailed"`
+```{r persp_plot_parameters,size='scriptsize',out.width='.7\\textwidth',fig.width=6,fig.height=6}
+persp(x, y, z, ticktype="detailed")
+```
+
+Parameters `theta` (left/right) and `phi` (up/down) control viewing angle
+
+```{r persp_plot_parameters1,size='scriptsize',out.width='\\textwidth',fig.width=4,fig.height=4}
+persp(x, y, z, theta=20, phi=0)
+```
+
+```{r persp_plot_parameters2,size='scriptsize',out.width='\\textwidth',fig.width=4,fig.height=4}
+persp(x, y, z, theta=20, phi=35)
+```
+
+## Contour Plots
+
+- A *contour line* is a curve along which the function has the same value
+- `image(...)` plots a grid of pixels colored corresponding to `z`-value
+- `contour(..., add=TRUE)` adds contour lines to an existing plot
+
+```{r contour_plot,size='scriptsize',fig.width=6,fig.height=4}
+image(x, y, z) # Plot colors
+contour(x, y, z, add=TRUE) # Add contour lines
+```
+
+```{r contour_plot_sphere,size='scriptsize',eval=FALSE}
+f <- function(x, y) sqrt(x^2+y^2)
+z <- outer(x, y, f)
+image(x, y, z, asp=1) # set aspect ratio, i.e. same scale for x and y
+contour(x, y, z, add=TRUE)
+```
+
+### Question
+
+- What would the above plot look like?
+
+```{r ,echo=FALSE,out.width='50%',fig.width=3,fig.height=3, fig.cap="Answer A"}
+f <- function(x, y) sqrt(10*x^2+y^2)
+z <- outer(x, y, f)
+image(x, y, z, asp=1)
+contour(x, y, z, add=TRUE)
+```
+ 
+```{r ,echo=FALSE,out.width='50%',fig.width=3,fig.height=3, fig.cap="Answer B"}
+<<contour_plot_sphere>>
+```
+
+```{r ,echo=FALSE,out.width='50%',fig.width=3,fig.height=3, fig.cap="Answer C"}
+f <- function(x, y) sin(x/4)
+z <- outer(x, y, f)
+image(x, y, z, asp=1)
+contour(x, y, z, add=TRUE)
+```
+
+- Pingo? TODO
+
+## Plotting Regression Plane
+
+```{r size='tiny',tidy=FALSE}
+library(car) # for dataset Highway1
+model <- lm(rate ~ len + slim, data=Highway1)
+model
+
+x1r <- range(Highway1$len)
+x1seq <- seq(x1r[1], x1r[2], length=30)
+x2r <- range(Highway1$slim)
+x2seq <- seq(x2r[1],x2r[2], length=30)
+z <- outer(x1seq, x2seq, 
+           function(a,b) predict(model, 
+                                 newdata=data.frame(len=a,slim=b)))
+```
+
+```{r ,fig.width=6,fig.height=4,tidy=FALSE}
+res <- persp(x=x1seq, y=x2seq, z=z,
+             theta=50, phi=-10)
+dp <- trans3d(Highway1$len, Highway1$slim, 
+                    Highway1$rate, pmat=res)
+points(dp, pch=20, col="red")
+```

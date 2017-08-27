@@ -1,0 +1,348 @@
+# Optimality Conditions
+The objectives for this \@ref(04_mathematical_basics) are to introduce the problem of optimization and the conditions under which optimality can be achieved. We begin by introducting the extreme value theory and the necessary and sufficient conditions that govern the solving of an optimization problem. In the second half of the chaper we introduce stationary points, the gradient vector and the Hessian matrix and finally we delve into concept of convexity and the case of convex optimization.      
+
+## Extreme Value Theorem
+
+The *Extreme Value Theorem* references the condition that: given a function satisfies a number of assumptions, the function must have both an absolute maximum and absolute minimum value. The theorem states: if a real-valued function $f$ is continuous within the closed and bounded interval between $[x_{L}, x_{U}]$. Then the function $f$ must *attain a maximum and minimum at least once*. In other words, there exists the numbers $x_{\max}, x_{\min} \in [x_{L}, x_{U}]$ such that
+
+\begin{equation*}
+f(x_{\max}) \geq f(x) \geq f(x_{\min}) \qquad\text{for all } x \in [x_{L}, x_{U}]
+\end{equation*}. 
+
+The theorem is also known as Weierstrass extreme value theorem, after Karl Weierstrass the mathamatican credited with its discovery. The theorem does not provide any explanation for how one can solve the function to attain the extreme values. 
+
+```{r fig.align="left", out.width="55%", echo=FALSE}
+include_figure("extreme_value_theorem.png")
+```
+
+
+
+## Optimum
+The optimization problem is analog to the problem of selecting the best possible option from a set of possible options. Otimization applies mathematical methods or optimization alogrithms in order to search for the optimal solution or *optimum*. There are many different optimization alogrithms available. The type of optimization problem determines the choice of methodology. It its important to understand the differences in methodology. Therefore, we begin by defining the conditions for an optimum solution in the case of the minimization problem.     
+
+**Definitions**
+
+The *local minimum* can be defined as the point $x^\ast$ if $x^\ast \in D$ and if there is a neighborhood $N(x^\ast)$, such that
+\begin{equation*}
+f(x^\ast) \leq f(x) \qquad \text{for all } x \in N(x^\ast) \subseteq D
+\end{equation*}
+In other words the local minimum is the optimum within a given neighbourhood of possible solutions. The local minimum can be but is not necessarily also a global minimum.    
+
+A *strict local minimum* can be defined as the point $x^\ast$ if $x^\ast \in D$ and if there is a neighborhood $N(x^\ast)$, such that
+\begin{equation*}
+f(x^\ast) < f(x) \qquad \text{for all } x \in N(x^\ast) \subseteq D
+\end{equation*}
+In other words the strict local minimum is a unique optimum within a given neighbourhood of possible solutions.The strict local minimum can be but is not necessarily also a global minimum.   
+
+A *global minimum* also known as an absolute minimum can be defined as the point $x^\ast$ if $x^\ast \in D$ and
+\begin{equation*}
+f(x^\ast) \leq f(x) \qquad \text{for all } x \in D
+\end{equation*}.
+In otherwords, the point at which our function $f$ attains its smallest value over its entire range. The global minimum is the most difficult to find. As generally, our knowledge of the function $f$ is only local. A majority of optimization algorithims are limited to establishing local optimum. 
+
+```{r fig.align="left", out.width="55%", echo=FALSE}
+include_figure("neighborhood.png")
+```
+
+
+## Optimality Condition
+
+For the point $x^\ast$ to be considered a minimum is must satisfy the following conditions *Conditions*.
+
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+df1 <- data.frame(
+    c("1st order condition and $f'(x^\\ast) = 0$", "2nd order condition and $f''(x^\\ast) > 0$"),
+    c("$\\rightarrow$ necessary", "$\\rightarrow$ sufficient")
+  )
+knitr::kable(
+  list(df1),
+  escape = FALSE,
+  booktabs = TRUE,
+  col.names = NULL
+)
+```
+
+The first order condition states that the first derivative at the point $x^\ast$ must be equal to zero i.e. $f'(x^\ast) = 0$. In otherwords, the slope of a tangent to the function at the point $x^\ast$ is zero. The point $x^\ast$ is a stationary point as the tangent is horizontal ($slope=0$). To establish, if the point $x^\ast$ is a minimum we must evaluate the second order derivative. The second order condition states that the second order derivate must be strictly positive i.e. $f''(x^\ast) > 0$. In otherwords, the slope of the first order derivative given by the second derivative must be strictly positive for the point $x^\ast$ to be a minimum as opposed to a maximum. 
+
+The Taylor series allows us to approximate the derivative of the function $f$ at a given point $x$ i.e. $f(x + h) = f(x) + f'(x) h + \Oh{h^2}$. We can presume the point $x$ is a local minimum if the Taylor approximation satisfies the following optimality conditions. Firstly, the approximation of the first derivatives around the point $x$ i.e. $f(x + h)$ and $f(x - h)$ (where $h$ is a small step) must be greater then or equal to zero. Therefore, the function $f$ at the point $x$ is stationary. This is known as the stationary condition and it is a necessary condition.  
+\begin{equation*}
+\left.
+\begin{split}
+f(x+h) - f(x) & \geq 0 \\
+f(x-h) - f(x) & \geq 0
+\end{split}
+\right\}
+\Rightarrow f'(x) = 0
+\end{equation*}
+
+The second optimality condition is a sufficient condition rather than a necessary condition for a minimum. The Taylor approximation of the second derivative for the function $f$ around the point $x$ must be strictly positive i.e. the slope of the first deriviative is strictly therefore by definition the point $x$ is a minimum.  
+\begin{equation*}
+\left.
+\begin{split}
+f(x+h) - f(x) & = \frac{1}{2} f''(x) h^2 + \Oh{h^3} & > 0 \\
+f(x-h) - f(x) & = \frac{1}{2} f''(x) h^2 + \Oh{h^3} & > 0
+\end{split}
+\right\}
+\Rightarrow f''(x) > 0
+\end{equation*}
+
+```{r fig.align="left", out.width="55%", echo=FALSE}
+include_figure("function_steps_h.png")
+```
+
+The optimality condition theorem can also be stated in matrix notation. Given that $f$ is a continous twice differentiable function, let $\vecval{x}^\ast \in \R^n$. The sufficient optimality condition or first order condition states: the components of the gradient vector for the function $f$ must be equal to zero. The components of the gradient vector are simply the first order partial derivatives if the function $f$ i.e. $f'(x)$. 
+\begin{equation*}
+\nabla f(\vecval{x}^\ast) = \left[ 0, \ldots, 0 \right]^T
+\end{equation*}
+
+The second order condition states: the Hessian matrix whose components are the second order partial derivatives of the function $f$ must be positive definite. 
+\begin{equation*}
+\nabla^2 f(\vecval{x}^\ast) \text{ is positive definite}
+\end{equation*}
+
+If these two conditions hold, then the given point $\vecval{x}^\ast$ is a *strict local minimizer*.
+
+The aboved outlined theory does not hold in all cases. For example, let the function $f(x) = \abs{x}$. The function $f(x)$ is plotted in figure (need reference) and clearly has a global minimum at the point $x^\ast = 0$. In this case the function $f$ is *not differentiable*. Therefore, above stated *optimality conditions do not apply*. 
+ 
+```{r abs,fig.width=4,fig.height=3,out.width='.7\\linewidth',echo=FALSE,eval=TRUE,keep='last'}
+x <- seq(-3.0, 3.0, by=0.01)
+y.f <- abs(x)
+plot(x, y.f, type="l", col="darkblue", lwd=2, ylab="abs(x)")
+grid()
+```
+
+## Stationary Points
+A stationary point alternatively called a critical point; is the point in the domain of a continuous differentiable function $f(x)$ where the slope of the function equals zero i.e. $f'(x)=0$. In otherwords, the point $\vecval{x}^\ast \in\R^{n}$ is *stationary* if the components of the gradient vector are equal to zero.   
+\begin{equation*}
+\nabla f(\vecval{x}^\ast) = 0
+\end{equation*}
+The necessary condition for optimality requires the point $x^\ast$ to be stationary. The point $\vecval{x}^\ast$ is called a *saddle point* if it is neither a local minimum or maximum. To determine if the stationary point $\vecval{x}^\ast$ is a saddle point we must inspect the Hessian matrix whose components are the second order derivatives of the function $f(x)$. The Hessian matrix must be indefinite i.e. its eigenvalues must not equal zero for the given point $\vecval{x}^\ast$ to be a saddle point. The following functions are examples of saddle points.
+
+- $f(x) = -x^2$ has only one stationary $x^\ast = 0$, since $\nabla f(x^\ast) = -2 x^\ast = 0$
+- $f(x) = x^3$ has a saddle point at $x^\ast = 0$
+- $f(x_1, x_2) = x_1^2 - x_2^2$ has a saddle point $\vecval{x}^\ast = \left[ 0, 0 \right]^T$
+
+The following table provides an overview of stationary points and the second order optimality conditions that apply in each case. The definiteness of the Hessian matrix determines the nature of the stationary point.
+
+```{r saddle_point,fig.width=6,fig.height=4,out.width='3.\\textwidth',echo=FALSE,eval=TRUE,message=FALSE,warning=FALSE,fig.keep='last',crop=TRUE}
+f <- function(x, y) x^2 - y^2
+
+x <- seq(-2, +2, 0.1)
+y <- seq(-2, +2, 0.1)
+z <- outer(x, y, f)
+
+zlim <- range(z, na.rm=TRUE)
+zlen <- zlim[2] - zlim[1] +1
+color.range <- rev(rainbow(zlen)) # height color lookup table
+
+nbcol <- length(color.range)
+nrz <- nrow(z)
+ncz <- ncol(z)
+# Compute the z-value at the facet centres
+zfacet <- z[-1, -1] + z[-1, -ncz] + z[-nrz, -1] + z[-nrz, -ncz]
+# Recode facet z-values into color indices
+facetcol <- cut(zfacet, nbcol)
+
+# , col=color.range[facetcol]
+persp(x, y, z, theta=30, phi=35, col="lightblue") 
+persp(x, y, z, theta=30, phi=35, col="lightblue") -> res
+xy <- data.frame(0, 0)
+points(trans3d(xy[,1], xy[,2], 0, pmat=res), col="darkred", pch=16)
+```
+
+## Stationary Points
+
+```{r ,echo=FALSE}
+f1 <- function(x, y) x^2 + y^2
+f2 <- function(x, y) x^2
+f3 <- function(x, y) -x^2 + y^2
+f4 <- function(x, y) -x^2
+f5 <- function(x, y) -x^2 - y^2
+
+createRainbowPlot <- function(func, theta, phi, resolution=1, color_resolution=1) {
+  x <- seq(-1, +1, 0.1/(resolution*10))
+  y <- seq(-1, +1, 0.1/(resolution*10))
+  z <- outer(x, y, func)
+  
+  zlim <- range(z, na.rm=TRUE)
+  zlen <- zlim[2] - zlim[1] +1
+  color.range <- rev(rainbow(zlen*(color_resolution*25))) # height color lookup table, zlen indicates color resolution
+  
+  nbcol <- length(color.range)
+  nrz <- nrow(z)
+  ncz <- ncol(z)
+  # Compute the z-value at the facet centres
+  zfacet <- z[-1, -1] + z[-1, -ncz] + z[-nrz, -1] + z[-nrz, -ncz]
+  # Recode facet z-values into color indices
+  facetcol <- cut(zfacet, nbcol)
+  
+	par(mar=c(0,0,0,0))
+
+  # , col=color.range[facetcol]
+  #persp(x, y, z, theta=30, phi=35, col=color.range[facetcol]) 
+  plt <- persp(x, y, z, theta=theta, phi=phi, col=color.range[facetcol], border=NA, axes=FALSE, box=FALSE)
+}
+```
+
+```{r ,fig.width=4,fig.height=3,out.width='50%',echo=FALSE,eval=TRUE,message=FALSE,warning=FALSE,fig.keep='last',crop=TRUE, fig.cap="Rainbow plot minimum"}
+createRainbowPlot(f1, 50, 30)
+```
+ 
+```{r ,fig.width=4,fig.height=3,out.width='50%',echo=FALSE,eval=TRUE,message=FALSE,warning=FALSE,fig.keep='last',crop=TRUE, fig.cap="Rainbow plot valley"}
+createRainbowPlot(f2, 45, 30)
+```
+ 
+```{r ,fig.width=4,fig.height=3,out.width='50%',echo=FALSE,eval=TRUE,message=FALSE,warning=FALSE,fig.keep='last',crop=TRUE, fig.cap="Rainbow plot saddle"}
+createRainbowPlot(f3, 50, 30)
+```
+ 
+```{r ,fig.width=4,fig.height=3,out.width='50%',echo=FALSE,eval=TRUE,message=FALSE,warning=FALSE,fig.keep='last',crop=TRUE, fig.cap="Rainbow plot ridge"}
+createRainbowPlot(f4, 40, 25)
+``` 
+ 
+```{r ,fig.width=4,fig.height=3,out.width='50%',echo=FALSE,eval=TRUE,message=FALSE,warning=FALSE,fig.keep='last',crop=TRUE, fig.cap="Rainbow plot maximum"}
+createRainbowPlot(f5, 45, 30)
+```
+ 
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+df1 <- data.frame(
+    c("Minimum", "Valley", "Saddle point", "Ridge", "Maximum"),
+    c("positive definite", "positive semi-definite", "indefinite", "negative semi-definite", "negative definite"),
+    c("$>0$", "$\\geq 0$", "$\\neq 0$", "$\\leq 0$", "$< 0$"),
+    c("$>0$", "$\\geq 0$", "$\\neq 0$", "$\\leq 0$", "$< 0$"),
+    c("cf. Fig. 4.1", "cf. Fig. 4.2","cf. Fig. 4.3","cf. Fig. 4.4","cf. Fig. 4.5")
+  )
+colnames(df1) <- c("Nature of $x*$", "Definiteness of $H$", "$x^THx$", "All $\\lambda_i$", "Illustration")
+knitr::kable(
+  list(df1),
+  escape = FALSE,
+  booktabs = TRUE
+)
+```
+
+## Convexity
+
+Convex optimization problems are a class of optimization problem that deal with the optimization of convex functions over (constrained by) a convex set. Convex optimization algorithms can effectively and efficiently solve convex optimizatin problems as these have the property that any local optimum must also be a global optimum. The difficulty with the application of convex optimization, lies in recognizing that our optimization problem is convex one or one that can be transformed into a problem of convex optimization. A convex domain is a region, such that, for a line segment (chord) drawn between any two points within the domain $D$ the line segment (chord) lies completely within the domain $D$. For a domain $D \subseteq \R^n$ the following inequality must hold.  
+\begin{equation*}
+\forall x_1, x_2 \in D \ \forall \alpha \in [0,1] \quad \alpha x_1 + (1-\alpha) x_2 \in D
+\end{equation*}
+Figure (reference needed) illustrates this inequality as it applies to convex and then a non-convex set. 
+
+A real-valued continous function is a convex function.  If the domain $D$ is a convex set and for any two points $x_1$ and $x_2$ the line segment (chord) drawn between these two points lies above the graph of the convex function. For the *function* $f : D \rightarrow \R$ the following inequality holds. 
+\begin{equation*}
+\forall x_1, x_2 \in D \ \forall \alpha \in [0,1] \quad f(\alpha x_1 + (1-\alpha) x_2) \leq \alpha x_1 + (1-\alpha) x_2
+\end{equation*}.
+
+```{r fig.align="left", out.width="55%", echo=FALSE, fig.cap="convex"}
+include_figure("convex.png")
+```
+
+```{r fig.align="left", out.width="55%", echo=FALSE, fig.cap="non-convex / concave"}
+include_figure("concave.png")
+```
+
+## Global Optimum
+Convex functions and convexity play an important role in optimization. Due to being convex they satisfy a number of convenient properties. Convexity, provides us with important information regarding the curvature of the functions and therefore also about the nature of the stationary points. For the general case, the constraints of an optimization problem are the *feasible set* see \@ref{eq:feasible}. 
+\begin{equation*} \label{eq:feasible}
+D = \left\{ \vecval{x} \in D \,\|\, g(\vecval{x}) \leq 0, h(\vecval{x}) = 0 \right\}
+\end{equation*}
+This set can be either convex or concave. The point of differentiation between a feasible set with convex properties as opposed to one with concave properties lies in the ease of finding a global solution. Global minima are usually *difficult* to find numerically, except in the case of a convex optimization problem where a local minimum must also be the global minimum. Therefore, an optimization problem is *convex* if both the objective function $f$ and its feasible set $D$ are *convex*. Thus the following theorem holds: the solution of the *convex optimization* problem is also by definition a *global solution*.
+
+## Summary: Linear Algebra
+
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+df1 <- data.frame(
+    c("Dot product", "Norm", "Transpose", "Identity matrix", "Inverse", "Pseudoinverse", "Determinant", "Eigenvalue, -vector", "Positive definite"),
+    c("$\\vecval{a} \\cdot \\vecval{b} = \\vecval{a}^T \\vecval{b}$", "$\\norm{\\vecval{x}}$", "$A^T = \\left[ a_{ji} \\right]_{ij}$", "$I_n = \\diag( 1, \\ldots, 1 ) \\in \\R^{n\\times n}$", "$A^{-1} \\in R^{n\\times n}$ such that $A A^{-1} = I$",   "$A^+ \\in R^{m\\times n}$ such that $A A^+ = I$", "$\\det{A}$", "$A \\vecval{v} = \\lambda\\vecval{v}$ for $\\vecval{v} \\neq 0$", "$\\vecval{x}^T A \\vecval{x} > 0$ for $\\vecval{x} \\neq 0$")
+  )
+colnames(df1) <- NULL
+knitr::kable(
+  list(df1),
+  escape = FALSE,
+  booktabs = TRUE
+)
+```
+
+## Summary: Numerical Analysis
+
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+df1 <- data.frame(
+    c("Partial derivative",
+      "Finite differences",
+      "Gradient",
+      "Hessian",
+      "Taylor series"),
+    
+    c("$\\frac{\\dd f}{\\dd x_i}(\\vecval{x})$",
+      "Numerical approximations to derivatives",
+      "$\\nabla f(\\vecval{x})$",
+      "$H(\\vecval{x}) = \\nabla^2 f(\\vecval{x})$",
+      "$f(x) = \\sum\\limits_{n=0}^{\\infty}{\\frac{f^{(n)}(x_0)}{n!} (x-x_0)^n}$")
+  )
+colnames(df1) <- NULL
+knitr::kable(
+  list(df1),
+  escape = FALSE,
+  booktabs = TRUE
+)
+```
+
+
+
+## Summary: Optimality Conditions
+- Local minimum $x^\ast$ if $f(x^\ast) \leq f(x)$ for all $x \in N(x^\ast) \subseteq D$
+- Global minimum if $f(x^\ast) \leq f(x)$ for all $x\in D$
+- Sufficient conditions for a strict local optimizer
+    1. $\nabla f(\vecval{x}^\ast) = 0$ (stationarity)
+    1. $\nabla^2 f(\vecval{x}^\ast)$ is positive definite
+- Convex optimization has a convex objective and a convex feasible set
+- The minimum in convex optimization is always a global minimum
+
+## Summary: R Commands
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+df1 <- data.frame(
+c(
+"`digitsBase(...)` ",
+"`strtoi(...)` ",
+"`\\%*\\%`",
+"`drop(A)` ",
+"`t(A)` ",
+"`diag(n)` ",
+"`solve(A)`, `ginv(A)` ",
+"`det(A)` ",
+"`eigen(A)` ",
+"`is.positive.definite(A)`, \\ldots ",
+"`D(f, x)` ",
+"`eval(f, ...)` ",
+"`optimHess(...)` ",
+"`taylor(...)`, `polyval(...)` "),
+
+c(
+"Convert number from base 10 to another base ",
+"Convert a number from any base to base 10 ",
+"Dot product, matrix multiplication ",
+"Deletes dimensions in $A$ with only one value ",
+"Transpose a matrix $A$ ",
+"Identity matrix of size $n \\times n$ ",
+"Inverse or pseudoinverse of a matrix $A$ ",
+"Determinant of $A$ if existent ",
+"Eigenvalues and eigenvectors of a matrix ",
+"Tests if matrix $A$ is positive definite, \\ldots ",
+"Derivative of a function $f$ regarding $x$ ",
+"Evaluates an expression $f$ at a specific point ",
+"Approximate to Hessian matrix ",
+"Taylor approximation")
+
+  )
+colnames(df1) <- NULL
+knitr::kable(
+  list(df1),
+  escape = FALSE,
+  booktabs = TRUE
+)
+```
+
+## Outlook
+
+- Further exercises in homework sheets 3 and 4
+- R will be used to implement optimization algorithms

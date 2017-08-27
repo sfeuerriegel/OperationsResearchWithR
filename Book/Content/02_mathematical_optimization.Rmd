@@ -1,0 +1,204 @@
+# Mathematical optimization {#mathematical_optimization}
+
+- Optimization uses a rigorous *mathematical model* to determine the most efficient solution to a described problem 
+- One must first identify an *objective*
+- Objective is a quantitative measure of the performance
+- Examples: profit, time, cost, potential energy
+- In general, any quantity (or combination thereof) represented as a *single number*
+```{r fig.align="center", out.width="80%", echo=FALSE}
+include_figure("extreme_value_theorem.png")
+```
+
+## Applications of Optimization
+
+- *Management* 
+    - Determining product portfolios
+    - Location planning
+    - Investments decisions
+- *Game theory* 
+    - Comparing players' strategies
+- *Logistics* 
+    - Finding optimal routes and schedules
+- *Design decisions* 
+    - Constructing processes, plants and other equipment
+- *Operation* 
+    - Adjustment to changes in environmental conditions, production planning, control, etc.
+- *Mathematical modeling* 
+    - Parameter estimation
+    - Model discrimination
+
+## Optimization Problem
+Optimization is the *minimization or maximization* of a function subject to (s.t.) constraints on its variables
+
+**Notation:** General form
+
+\begin{align*}
+\min\limits_{\boldsymbol{x}} f(\boldsymbol{x}) \quad\text{s.t.}\quad & h(\boldsymbol{x}) = 0 \\
+ & g(\boldsymbol{x}) \leq 0
+\end{align*}
+
+with
+
+- $\boldsymbol{x} \in\R^n$ as the *variable*, *unknown* or *parameter*
+- *Objective function* $f : D \rightarrow \R$, $D \subseteq \R^n$
+- *Equality constraints* $h : D_h \rightarrow \R^l$, $D_h \subseteq \R^n$
+- *Inequality constraints* $g : D_g \rightarrow \R^k$, $D_g \subseteq \R^n$
+
+## Properties of Optimization Problems
+
+- **Objective**: Linear, quadratic, non-linear, etc. 
+- **Constraints**: Equality and inequality 
+- **Variable types**: $\boldsymbol{x}$ can be continuous, integer, mixed 
+- **Direction**: $\min\limits_{\vecval{x}} f(\vecval{x}) \Leftrightarrow \max\limits_{\vecval{x}} -f(\vecval{x})$ 
+- **Bounds**: Lower $\vecval{x}_L \leq \vecval{x}$ or upper $\vecval{x} \leq \vecval{x}_U$ 
+- **Dimension**: One dimensional if $n = 1$, or multi-dimensional if $n > 1$
+- **Optima**: Isolated, local or global nature 
+
+## Classification of Optimization Problems
+- *Linear Programming (LP)* 
+    - Objective function and constraints are linear
+    - $\min\limits_{\vecval{x}} \vecval{c}^T \vecval{x}$ s.t. $A \vecval{x} \leq \vecval{b}$, $\vecval{x} \geq 0$
+- *Quadratic Programming (QP)* 
+    - Objective function is quadratic and constraints are linear
+    - $\min\limits_{\vecval{x}} \vecval{x}^T Q \vecval{x}$ s.t. $A \vecval{x} \leq \vecval{b}$, $\vecval{x} \geq 0$
+- *Non-Linear Programming (NLP):* objective function or at least one constraint is non-linear
+- *Integer Programming (IP):* all variables are discrete
+- *Mixed Integer Programming (MIP)* 
+    - Continuous and discrete variables
+    - Problem can be linear (MILP) or non-linear (MINLP)
+
+## Classification of Optimization Problems
+- *Dynamic Optimization:* solution is a function of time
+- *Stochastic Optimization*
+    - Model cannot be fully specified, but has uncertainties with confidence estimates
+    - Optimize expected performance given uncertainty
+
+
+### Question {-}
+- What type is the following optimization problem?
+$$
+\max\limits_{x,y} 3x + y^2
+\quad
+\text{s.t.}
+\quad 
+x + y < 10 \text{ and } y \in \left\{ 1, 2, 4, 8 \right\}
+$$
+a) MIP
+b) MILP
+c) MINLP
+- Pingo vielleicht, dunno ob das solange aktiv ist / sein soll(TODO?)
+
+## Optimal Solution
+
+```{r fig.align="center", out.width="80%", echo=FALSE}
+include_figure("optimization_problem.png")
+``` 
+
+- $x^\ast$ is a *global minimum* if $x^\ast \in D$ and $f(x^\ast) \leq f(x) \qquad \text{for all } x \in D$
+
+- $\rightarrow$ Global minimizers are desired, though often one has only local knowledge of $f$
+
+### Examples of optimal solutions {-}
+
+```{r fig.align="center", fig.cap="Isolated global solution", out.width="80%", echo=FALSE}
+include_figure("isolated_global_solution.png")
+``` 
+
+```{r fig.align="center", fig.cap="One global, two local solutions", out.width="80%", echo=FALSE}
+include_figure("two_local_solutions.png")
+``` 
+
+```{r fig.align="center", fig.cap="A local but no global solution", out.width="80%", echo=FALSE}
+include_figure("local_non-global_solution.png")
+``` 
+
+```{r fig.align="center", fig.cap="Many non-isolated, global solutions", out.width="80%", echo=FALSE}
+include_figure("non-isolated_global_solution.png")
+``` 
+
+## Optimization Procedure
+*Formulation and solution* of optimization problems usually follows:
+
+1. *Analysis of environment* to determine the variables of interest
+1. Definition of optimality criteria as an *objective function* with (additional) constraints
+1. Formulation as a *mathematical model* with degrees of freedom
+1. *Numerical optimization* to find a solution
+1. *Verification of the solution* through sensitivity analysis (with respect to the assumptions made in the problem formulation)
+
+## Motivation
+
+### Production Scheduling
+- **Problem**
+    - Given plants $i = 1, \ldots, M$ where each *manufactures* $P_i$ goods
+    - Each plant has a *maximal output* $O_i$
+    - Each plant manufactures at a *capacity-specific cost* $C_i(P_i)$, which gives the cost as a function of the production
+    - Each customer $j = 1, \ldots, N$ *requests* $C_j$ goods
+- **Objective function**: find the *optimal production schedule* such that the manufacturing and shipment costs are minimized
+
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+include_figure("problem_product_scheduling.png")
+```
+
+### Portfolio Optimization
+- **Problem**
+    - Investor wants to *invest* money such that it *maximizes* the investor's *utility*
+    - Utility $U$ depends on *daily return* $\mu$ and *risk* $\sigma^2$
+    - Given risk taking $\kappa$, then $U(\mu, \sigma^2) = \mu - \frac{\kappa}{2} \sigma^2$
+- **Objective function**: *Maximize $U(\mu, \sigma^2)$* among a range of stocks $s_1, \ldots s_N$
+
+```{r echo=FALSE, fig.align="center", out.width="80%"}
+df1 <- data.frame(
+    "$\\mu$", 0.2, 0.5, 0.1
+  )
+colnames(df1) <- c("$\\vecval{c}^T$","$s_1$","$s_2$", "$s_3$")
+df2 <- data.frame(
+    c("$s_1$","$s_2$", "$s_3$"),
+    c(0.1,0.02,0.02),
+    c(0.02,0.1,0.02),
+    c(0.02,0.02,0.1)
+  )
+colnames(df2) <- c("$Q$","$s_1$","$s_2$", "$s_3$")
+knitr::kable(
+  list(df1,df2),
+  escape = FALSE,
+  booktabs = TRUE
+)
+```
+
+
+$$
+\Rightarrow
+\max\limits_{\vecval{x}} \vecval{c}^T \vecval{x} - \frac{\kappa}{2} \vecval{x}^T Q \vecval{x}
+\quad
+\text{s.t.}
+\quad
+x_i \geq 0 \text{ and } \sum\limits_i{x_i} = 1
+$$
+
+### Portfolio Optimization in R
+```{r quadprog,eval=FALSE}
+library(quadprog) # load necessary library
+kappa <- 4 # set risk taking
+# objective function
+c <- c(0.02, 0.05, 0.01)
+Q <- matrix(c(0.1,0.02,0.02, 0.02,0.1,0.02, 
+              0.02,0.02,0.1), nrow=3)
+# constraints
+A <- matrix(c(1,1,0,0, 1,0,1,0, 1,0,0,1), nrow=4)
+b <- c(1, 0, 0, 0)
+
+sol <- solve.QP(kappa/2*Q, c, t(A), b, meq=1) # call solver
+sol$solution # ratio of stocks in portfolio
+sol$value # minimum value of objective function
+```
+
+## Outlook
+
+1. *Introduction to R*
+1. *Advanced R* 
+    - Programming prerequisites 
+    - Visualize optimization routines
+1. *Numerical Analysis:* 
+    - Mathematical prerequisites to derive and formalize optimization routines
+1. *Optimization in R:*
+    - Use of built-in optimization routines

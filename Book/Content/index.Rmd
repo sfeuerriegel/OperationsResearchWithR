@@ -1,0 +1,24 @@
+--- 
+title: "Operations Research in R"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+output: bookdown::gitbook
+documentclass: book
+bibliography: [literature.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This book provides an explanation of operations research and numerical optimization in R."
+---
+
+```{r include=FALSE}
+knitr::write_bib(c(
+  .packages(), 'bookdown', 'knitr', 'rmarkdown'
+), 'packages.bib')
+
+include_figure <- function(filename) {
+  knitr::include_graphics(paste0("../../Graphics/PDF/", filename))
+}
+
+knitr::opts_chunk$set(fig.pos = 'h!')
+
+```
