@@ -1,0 +1,172 @@
+\documentclass
+[answers]
+{exercise_sheet}
+
+\input{../information}
+\input{preamble.tex}
+
+<<setup, include=FALSE>>=
+# change default language to display error messages in English
+Sys.setenv(LANGUAGE = "en")
+
+# smaller font size for chunks
+library(knitr)
+opts_chunk$set(size = "footnotesize", fig.width = 3, fig.height = 3)
+# , highlight=FALSE
+
+listing_source <- function(x, options) {
+    paste("\\parbox{\\textwidth}{",
+      x, "}\n\n", sep = "")
+  }
+listing_output <- function(x, options) {
+    paste("\\parbox{\\textwidth}{",
+      x, "}\n\n", sep = "")
+  }
+  
+# knit_hooks$set(source=listing_source, output=listing_output)
+
+# , inline = function(x, options) x, document = function(x, options) x, chunk = function(x, options) x
+# \\parbox{\\textwidth}{",
+@
+
+\lohead{\CourseTitle: Homework 1}
+
+%% necessary for knitr
+%\documentclass{article}
+%\renewenvironment{alltt}{}{}
+
+\begin{document}
+
+\QuestionBlock{Introduction to R}
+  {This homework sheet will test your knowledge of basics commands in R.}
+  
+\begin{Question}{3}
+Use R to determine which of the following equations are correct.
+\begin{itemize}
+\item $2 \cdot 4 \cdot 8 \neq 4^3$
+\item $52 \cdot 81 \cdot 22 \leq 45^3$
+\item $5\cdot \log_{10} \sqrt{57^5} > \log_{10}1000^3$
+\end{itemize}
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{4}
+<<>>=
+2 * 4 * 8 != 4^3
+52 * 81 * 22 <= 45^3
+5 * log10(sqrt(57^5)) > log10(1000^3)
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{3}
+Use the variables \verb|price|, \verb|net_price| and \verb|vat| to construct a formula to calculate the price given a net price of $57$ and a VAT of $0.19$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{5}
+<<>>=
+net_price <- 57
+vat <- 1 + 0.19
+price <- net_price * vat
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{3}
+Create a vector \verb|odd| that contains all odd numbers between 1 and 100 and a vector \verb|even| that contains all even numbers between 1 and 100.
+
+Which of those two vectors has the higher mean and which one has the higher variance? 
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+<<>>=
+odd <- seq(from=1, to=99, by=2)
+even <- seq(from=2, to=100, by=2)
+
+# mean of even is higher
+mean(odd)
+mean(even)
+
+# 
+var(odd)
+var(even)
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+Use your vectors \verb|odd| and \verb|even| from the previous task to generate a matrix \verb|mat| in which the first column consists of the odd numbers and the second column of the even numbers. Which number is at the matrix entry in row 17 of column~1? How can one select the first even number?
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{1}
+<<>>=
+mat <- as.data.frame(cbind(odd, even))
+mat[17, 1] # 
+mat[1, 2]
+@
+\end{Answer}\fi\makeatother
+
+
+\begin{Question}{3}
+Store the following snippet as a CSV file and then load the file into R. This file is missing its header names. The data is in the following order: name, height, shoe size and age. Calculate the mean for height and shoe size. 
+
+Note: to return a column of a matrix as a vector you can use the following notation: \verb|matrix[,col_index]|, e.\,g. persons[,1] for the first column.
+
+\vspace*{0.5cm}
+\textbf{File snippet} \verb@persons.csv@
+\verbatiminput{data/persons.csv}
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{4}
+<<>>=
+persons <- read.csv("data/persons.csv", header=FALSE, sep=",")
+persons
+
+# mean_height
+mean(persons[,2])
+# mean_shoesize
+mean(persons[,3])
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{2}
+In order to simplify data operations, one usually assigns column names to data frames. Utilize data from the previous task and then give the matrix the corresponding column names (name, height, shoe size, age). Then repeat the calculation of the mean of height and shoe size with the new columns.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{4}
+<<>>=
+colnames(persons) <- c("name", "height", "shoesize", "age")
+
+mean(persons$height)
+mean(persons$shoesize)
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{2}
+Add a column \verb|gender| to the persons matrix containing the correct data. Afterwards, calculate the standard deviation for the height of the women.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{4}
+<<>>=
+persons[["gender"]] <- c("m", "m", "m", "m", "f", "f", "f")
+sd(persons[persons$gender == "f", "height"])
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+What are the values of \verb@x@, \verb@y@, and \verb@z@ after executing the following code?
+<<>>=
+x <- 3
+x <- x * 2
+y <- 1
+z <- x - y
+x <- x * x
+z <- z + x
+@ 
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{1}
+<<>>=
+x
+y
+z
+@
+\end{Answer}\fi\makeatother
+
+\end{document}

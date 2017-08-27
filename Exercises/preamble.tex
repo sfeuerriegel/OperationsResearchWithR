@@ -1,0 +1,41 @@
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\usepackage{animate}
+
+\usepackage{verbatim}
+\usepackage{comment}
+\usepackage{listings}
+%%\usepackage{inconsolata}
+%
+\lstset{
+  basicstyle=\ttfamily,
+  breaklines=true,
+%  breakatwhitespace=true,
+%  breakindent=2ex,
+% postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\hookrightarrow\space}}
+}
+
+\usepackage{amsmath}
+\usepackage{amssymb}% for \mathbb
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage[super]{nth}
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}%
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}%
+
+% Swap the definition of \abs* and \norm*, so that \abs
+% and \norm resizes the size of the brackets, and the 
+% starred version does not.
+\makeatletter
+\let\oldabs\abs
+\def\abs{\@ifstar{\oldabs}{\oldabs*}}
+%
+\let\oldnorm\norm
+\def\norm{\@ifstar{\oldnorm}{\oldnorm*}}
+\makeatother
+
+\newcommand{\dd}{\mathop{}\!\mathrm{d}}
+
+\newcommand{\vecval}[1]{\bm{#1}}

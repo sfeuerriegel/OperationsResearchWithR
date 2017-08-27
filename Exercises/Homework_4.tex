@@ -1,0 +1,647 @@
+\documentclass
+[answers]
+{exercise_sheet}
+
+\input{../information}
+\input{preamble.tex}
+
+<<setup, include=FALSE>>=
+# change default language to display error messages in English
+Sys.setenv(LANGUAGE = "en")
+
+# smaller font size for chunks
+library(knitr)
+opts_chunk$set(size = "footnotesize", fig.width = 3, fig.height = 3)
+# , highlight=FALSE
+
+listing_source <- function(x, options) {
+    paste("\\parbox{\\textwidth}{",
+      x, "}\n\n", sep = "")
+  }
+listing_output <- function(x, options) {
+    paste("\\parbox{\\textwidth}{",
+      x, "}\n\n", sep = "")
+  }
+  
+# knit_hooks$set(source=listing_source, output=listing_output)
+
+# , inline = function(x, options) x, document = function(x, options) x, chunk = function(x, options) x
+# \\parbox{\\textwidth}{",
+@
+
+\lohead{\CourseTitle: Homework 4}
+
+%% necessary for knitr
+%\documentclass{article}
+%\renewenvironment{alltt}{}{}
+
+\begin{document}
+
+\section*{Elementary Concepts in Numerical Analysis}
+
+\subsection*{Differentiation}
+
+\begin{Question}{5}
+Prove that the function $f : \mathbb{R} \rightarrow \mathbb{R}$ with $f(x) = x$ is continuous and differentiable. 
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{10}
+As differentiability implies continuity, we only need to show that $f$ is differentiable. For a function to be differentiable, the following equation
+\begin{equation*}
+\forall x \in \mathbb{R} \quad \exists \quad \lim\limits_{h \rightarrow 0} \frac{f(x_0+\varepsilon) - f(x_0)}{\varepsilon}
+\end{equation*}
+needs to be satisfied. We thus obtain
+\begin{equation*}
+\lim\limits_{h \rightarrow 0} \frac{f(x_0+\varepsilon) - f(x_0)}{\varepsilon} = \lim\limits_{h \rightarrow 0} \frac{x_0+\varepsilon - x_0}{\varepsilon} = \lim\limits_{h \rightarrow 0} \frac{\varepsilon}{\varepsilon}  = \lim\limits_{h \rightarrow 0} 1 = 1 .
+\end{equation*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{3}
+Show mathematically why $f : \mathbb{R} \rightarrow \mathbb{R}$ with $f(x) = \abs{x}$ is not differentiable at $x_0 = 0$. 
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{10}
+We separately calculate the derivative from left and right at $x_0 = 0$. Since these have different values, we conclude that no unique limit exists and the function $\abs{\cdot}$ is not differentiable. 
+
+Derivative from left:
+\begin{equation*}
+\lim\limits_{\varepsilon \mapsto 0, \varepsilon > 0} \frac{f(x_0 + \varepsilon) - f(x_0)}{\varepsilon} 
+= \lim\limits_{\varepsilon \mapsto 0, \varepsilon > 0} \frac{\abs{0 +\varepsilon} - \abs{0}}{\varepsilon}
+= \lim\limits_{\varepsilon \mapsto 0, \varepsilon > 0} \frac{\abs{\varepsilon}}{\varepsilon}
+= 1
+\end{equation*}
+
+Derivative from right:
+\begin{equation*}
+\lim\limits_{\varepsilon \mapsto 0, \varepsilon < 0} \frac{f(x_0 + \varepsilon) - f(x_0)}{\varepsilon} 
+= \lim\limits_{\varepsilon \mapsto 0, \varepsilon < 0} \frac{\abs{0 +\varepsilon} - \abs{0}}{\varepsilon}
+= \lim\limits_{\varepsilon \mapsto 0, \varepsilon < 0} \frac{\abs{\varepsilon}}{\varepsilon}
+= -1
+\end{equation*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+Use the chain rule (amongst others) to calculate the derivative of $2 x^3 + x^2 \log{4 x}$. 
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{5}
+\begin{align*}
+& \frac{\dd (2 x^3 + x^2 \log{4 x})}{\dd x} \\
+= & \frac{\dd (2 x^3)}{\dd x} + \frac{\dd(x^2 \log{4 x})}{\dd x} \\
+= & 6 x^2 + 2 x \log{(4x)} +  x^2 \frac{\dd(\log{4 x})}{\dd x} \\
+= & 6 x^2 + 2 x \log{(4x)} +  4 x^2 \frac{1}{4x} \\
+= & 6 x^2 + 2 x \log{(4x)} +  x
+\end{align*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{3}
+Use R to derive the following expressions symbolically:
+\begin{itemize}
+\item $\frac{\dd}{\dd x} \left( x^4 + 2x^2 + \exp{x} \right)$
+\item $\frac{\dd^2}{\dd x^2} \left( x^4 + 2x^2 + \exp{x} \right)$
+\end{itemize}
+
+Calculate the value of the first derivative at point $x = 3$
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+<<>>=
+fx <- expression(x^4+2*x^2+exp(x))
+
+D(fx, "x") 
+D(D(fx, "x"), "x") 
+
+eval(D(fx, "x"), list(x=3))
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{3}
+Use R to derive the following expressions symbolically:
+\begin{itemize}
+\item $\frac{\dd}{\dd x} \left[ x^4 + 2x^2 + \exp{x} \right]$
+\item $\frac{\dd^2}{\dd x^2} \left[ x^4 + 2x^2 + \exp{x} \right]$
+\end{itemize}
+
+Calculate the value of the first derivative at point $x = 3$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+<<>>=
+fx <- expression(x^4+2*x^2+exp(x))
+
+D(fx, "x") 
+D(D(fx, "x"), "x") 
+
+eval(D(fx, "x"), list(x=3))
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{3}
+Approximate the first derivative at point $x = 0.1$ via forward, backward and centered differences for 
+\begin{equation*}
+f(x) = 3 x^4 + 2x \qquad\text{and}\qquad g(x) = \sin{\frac{1}{x}} .
+\end{equation*}
+Subsequently, compare the approximated derivatives to their true values. Use $h = 10^{-6}$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{10}
+<<>>=
+h <- 10^(-6)
+x <- 0.1
+
+f <- function(x) 3*x^4 + 2*x 
+# forward differences
+(f(x+h) - f(x)) / h
+# backward differences
+(f(x) - f(x-h)) / h
+# centered differences
+(f(x+h) - f(x-h)) / (2*h)
+# true derivative
+eval(D(expression(3*x^4 + 2*x), "x"), list(x=0.1))
+
+g <- function(x) sin(1/x)
+# forward differences
+(g(x+h) - g(x)) / h
+# backward differences
+(g(x) - g(x-h)) / h
+# centered differences
+(g(x+h) - g(x-h)) / (2*h)
+# true derivative
+eval(D(expression(sin(1/x)), "x"), list(x=0.1))
+@
+While the results are fairly equal for the first digits in case of $f$, the results differ for function $g$. Here, we see numerical errors of minor magnitude since this function is numerically more unstable. Usually, central differences provide the best approximation; this is also the case above.
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+Calculate the 2nd order central differences at point $x = 0.01$ for 
+\begin{equation*}
+g(x) = \sin{\frac{1}{x}} .
+\end{equation*}
+and compare to the true value from a symbolic differentiation. Use $h = 10^{-6}$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{5}
+<<>>=
+h <- 10^(-6)
+x = 0.01
+
+g <- function(x) sin(1/x)
+
+# 2nd order central differences
+(g(x+h) - 2*g(x) + g(x-h)) / h^2
+
+# true derivative
+eval(D(D(expression(sin(1/x)), "x"), "x"), list(x=0.01))
+@
+We see that the numerical approximation for $g$ is here numerically very unstable; resulting in larger errors.
+\end{Answer}\fi\makeatother
+
+\begin{Question}{2}
+Derive a formulate to approximate a Hessian matrix of a function $f(x,y)$ using forward differences. Let $h$ be an arbitrary step size.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{15}
+We approximate the Hessian Matrix of the function $f(x,y)$ at a given point $(x_0,y_0)$. Then, we obtain
+\begin{equation*}
+\nabla^2 f(x,y) = \begin{bmatrix}
+\frac{f(x+2h,y) - 2 f(x+h,y) + f(x,y)}{h^2} & \frac{f(x+h,y+h) - f(x+h,y) -f(x,y+h) + f(x,y)}{h^2} \\
+\frac{f(x+h,y+h) - f(x+h,y) - f(x,y+h) + f(x,y)}{h^2} & \frac{f(x,y+2h) - 2 f(x,y+h) + f(x,y)}{h^2} 
+\end{bmatrix}
+.
+\end{equation*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+Write a user-defined function that can approximate a Hessian matrix of $f(x,y)$ using forward differences. Test your function with $f(x,y) = 2x + 3xy^2 + y^3 + 1$ at a point $(x_1, x_2) = (4,5)$ with a given step size $h=0.0001$.
+
+Note: You can also pass function names as arguments; see the following example. 
+<<>>=
+f <- function(x) x^2
+
+g <- function(x, func) func(x)+2
+g(3, f) 
+@
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+<<size='footnotesize'>>=
+hessian <- function(f, x, y) {
+  h <- 10^(-6)
+  result <- matrix(rep(0, 4), nrow=2)
+
+  result[1,1] <- (f(x+2*h, y) - 2*f(x+h, y) + f(x, y)) / h^2
+  result[2,1] <- (f(x+h, y+h) - f(x+h, y) - f(x, y+h) + f(x, y)) / h^2
+  result[1,2] <- (f(x+h, y+h) - f(x+h, y) - f(x, y+h) + f(x, y)) / h^2
+  result[2,2] <- (f(x, y+2*h) - 2*f(x, y+h) + f(x, y)) / h^2
+	
+  return (result)
+}
+
+f <- function(x, y) (2*x + 3*x*y^2 - y^3 + 1)
+hessian(f, 4, 5)
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+Consider the following function $f(x,y) = 2x + 3xy^2 + y^3 + 1$. Use the function \verb@optimHess@ in R to approximate the Hessian matrix, i.\,e. with forward differences at a point $(x_1, x_2)=(4,5)$ with a given step size $h=0.0001$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+<<>>=
+f <- function(x) (2*x[1] + 3*x[1]*x[2]^2 - x[2]^3 + 1)
+optimHess(c(4, 5), f, control=(ndeps=0.0001))
+@
+\end{Answer}\fi\makeatother
+
+\subsection*{Taylor Approximation}
+
+\begin{Question}{1}
+Define a Taylor series mathematically. 
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+Taylor series is a representation of a function $f$ as an infinite sum of terms that are calculated from the values of the function's derivatives at a single point via
+\begin{equation*}
+\sum\limits_{n=0}^\infty{\frac{f^{(n)}(x_0)}{n!}(x-x_0)^n} .
+\end{equation*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+What is a Maclaurin series?
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+If the Taylor series is centered around $x_0 = 0$, then the series
+\begin{equation*}
+f(x) = \sum\limits_{n=0}^\infty{\frac{f^{(n)}(0)}{n!}(x)^n}
+\end{equation*}
+is also called a \textbf{Maclaurin series}.
+\end{Answer}\fi\makeatother
+
+%\textbf{Taylor Approximation} is a finite sum of terms that are calculated from the values of the function's derivatives at a single point (the expression is also called \textbf{Taylor polynomial}):
+%\begin{equation*}
+%f(x) = f(x_0) + f'(x_0)(x-x_0)+ \frac{f'(x_0)}{2!}(x-x_0)^2+\frac{f''(x_0)}{3!}(x-x_0)^3 + \ldots + \frac{f^{(n)}(x_0)}{n!}(x-x_0)^n + R_n,
+%\end{equation*}
+%where
+%\begin{equation*}
+%R_n = \frac{f^{(n+1)}(c)}{(n+1)!}(x-x_0)^{n+1}, \quad c \in (x_0,x)
+%\end{equation*}
+%is the \textbf{Lagrange Form of the Remainder}.
+%
+%\textbf{Note:} the more terms there are in the Taylor Polynomial (higher $n$), the better is the approximation. Which means that the original function is represented more precisely, and therefore the Remainder (also called Error Term) is closer to zero.
+%
+%\textbf{Cauchy Estimate:}
+%\begin{equation*}
+%\abs{R_n} = \frac{M}{(n+1)!}\abs{x-x_0}^{n+1},
+%\end{equation*}
+%where $M$ is the max value of $f^{(n+1)}(c)$ on the interval from $x_0$ to $x$
+
+\begin{Question}{1}
+What is the Taylor series for $e^x$ with $x_0 = 0$?
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+\begin{equation*}
+e^x = 1+x+\frac{x^2}{2!}+\frac{x^3}{3!}+\ldots = \sum\limits_{n=0}^\infty{\frac{x^n}{n!}}
+\quad
+\text{ for all $x$}
+\end{equation*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+What is the Taylor series for $\ln{1-x}$ with $x_0 = 0$?
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+\begin{equation*}
+\ln{(1-x)} = - \sum\limits_{n=1}^\infty{\frac{x^n}{n}}
+\quad
+\text{ for $\abs{x} < 1$}
+\end{equation*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+What is the Taylor series for $\ln{1+x}$ with $x_0 = 0$?
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+\begin{equation*}
+\ln{(1+x)} = \sum\limits_{n=1}^\infty{(-1)^{n+1}\frac{x^n}{n}}
+\quad
+\text{ for $\abs{x} < 1$}
+\end{equation*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+What is the Taylor series for $\frac{1}{1-x}$ with $x_0 = 0$?
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+\begin{equation*}
+\frac{1}{1-x} = 1+x+x^2+x^3+\ldots = \sum\limits_{n=0}^\infty{x^n}
+\end{equation*}
+\end{Answer}\fi\makeatother
+
+%A Taylor Approximation in 2 variables of order 2 is:
+%\begin{align*}
+%f(x,y)=&f(x_0,y_0)+f_x(x_0,y_0)(x-x_0)+f_y(x_0,y_0)+\\
+%&\frac{1}{2!}f_{xx}(x_0,y_0)(x-x_0)^2+\frac{1}{2!}f_{yy}(x_0,y_0)(y-y_0)^2+f_{xy}(x_0,y_0)(x-x_0)(y-y_0)
+%\end{align*}
+
+\begin{Question}{4}
+What is the 2-nd order Taylor approximation of a function $f(x,y) = \ln{1+x} + \ln{1-y}$ around $(x_0,y_0) = (0,0)$?
+
+Hint: a Taylor Series in 2 variables can be written as
+\begin{align*}
+f(x,y) = f(x_0,y_0) & + \left[ (x-x_0) \frac{\partial}{\partial x} + (y-y_0) \frac{\partial}{\partial y} \right] f(x_0,y_0) \\
+& +\frac{1}{2!} \left[ (x-x_0) \frac{\partial}{\partial x} + (y-y_0)\frac{\partial}{\partial y} \right]^2 f(x_0,y_0) + \ldots
+\end{align*}
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{10}
+\begin{align*} 
+f(0,0) &= 0 \\
+f_x(0,0) &= \left. \frac{1}{1+x} \right|_{(0,0)} = 1 \\
+f_y(0,0) &= \left. -\frac{1}{1-y} \right|_{(0,0)} = -1 \\
+f_{xx}(0,0) &= \left. -\frac{1}{(1+x)^2} \right|_{(0,0)} = -1 \\
+f_{yy}(0,0) &= \left. -\frac{1}{(1-y)^2}\right |_{(0,0)} = -1 \\
+f_{xy}(0,0) &= 0 \\
+f(x,y) &= 0+1x+(-1)y+\frac{1}{2!}(-1)x^2+\frac{1}{2!}(-1)y^2+0xy \\
+&= x - y - \frac{1}{2}x^2 - \frac{1}{2}y^2
+\end{align*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{4}
+What is the 2-nd order Taylor approximation of a function 
+\begin{equation*}
+f(x,y) = \sqrt[5]{x^3+ e^y}
+\end{equation*}
+around $(x_0,y_0) = (0,0)$?
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{10}
+\begin{align*}
+f(0,0) &= 1 \\
+f_x(0,0) &= \left. \frac{1}{5}\left(x^3+e^y\right)^{-\frac{4}{5}}3x^2 \right|_{(0,0)} = 0 \\
+f_y(0,0) &= \left. \frac{1}{5}\left(x^3+e^y\right)^{-\frac{4}{5}}e^y \right|_{(0,0)} = \frac{1}{5} \\
+f_{xx}(0,0) &= \left. \frac{6x}{5}\left(x^3+e^y\right)^{-\frac{4}{5}}e^y-\frac{3x^2}{5}\left(-\frac{4}{5}\right)\left(x^3+e^y\right)^{-\frac{9}{5}}3x^2 \right|_{(0,0)} = 0 \\
+f_{yy}(0,0) &= \left. \frac{1}{5}\left(x^3+e^y\right)^{-\frac{4}{5}}e^y-\frac{4e^{2y}}{25}\left(x^3+e^y\right)^{-\frac{9}{5}} \right|_{(0,0)} = \frac{1}{5}-\frac{4}{25} = \frac{1}{25} \\
+f_{xy}(0,0) &= \left. -\frac{4}{25}\left(x^3+e^y\right)^{-\frac{9}{5}}3x^2e^y \right|_{(0,0)} = 0 \\
+f(x,y) &= 1 + 0x + \frac{1}{5}y + \frac{1}{2!}0x^2 + \frac{1}{2!}\frac{1}{25}y^2 + 0xy \\
+&= 1 + \frac{1}{5}y + \frac{1}{50}y^2
+\end{align*}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{2}
+Calculate the Taylor approximation of $f(x) = \sin{x}$ up to degree 4 around $x_0 = 0$. Then evaluate and compare it for $x = 0.1$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{4}
+<<>>=
+library(pracma)
+
+f <- function(x) sin(x)
+taylor.poly <- taylor(f, x0=0, n=4)
+taylor.poly
+
+polyval(taylor.poly, 0.1) # x = 0.1
+sin(0.1) # for comparison
+polyval(taylor.poly, 0.5) - sin(0.5)
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{1}
+Visualize the function $f(x) = \log{x+1}$ and its Taylor approximation for $x_0 = 0$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{2}
+<<plot_taylor_log,fig.width=6,fig.height=4,fig.keep='last'>>=
+f <- function(x) log(x+1)
+
+taylor.poly <- taylor(f, x0=0, n=4)
+x <- seq(-1.5, 1.5, by=0.01)
+y.f <- f(x)
+y.taylor <- polyval(taylor.poly, x)
+plot(x, y.f, type="l", col="gray", lwd=2, ylim=c(-4, +2))
+lines(x, y.taylor, col="darkblue")
+grid()
+@
+\end{Answer}\fi\makeatother
+
+\subsection*{Optimality Conditions}
+
+\begin{Question}{9}
+Find the stationary points of the function $f(x, y) = x^3 + 3y - y^3 - 3x$ and analyze their nature using Sylvester's Rule.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{35}
+\begin{enumerate}
+\item We first utilize the first order optimality condition to find stationary points, i.\,e. those points where $\nabla f = 0$ is satisfied. Accordingly, we obtain
+\begin{equation*}
+\nabla f = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}\right)^T \stackrel{!}{=} 0
+\end{equation*}
+and 
+\begin{align*}
+\frac{\partial f}{\partial x} &= 3x^2 - 3 = 0 \qquad\Rightarrow\qquad x = \pm 1 , \\
+\frac{\partial f}{\partial y} &= 3 - 3y^2 = 0 \qquad\Rightarrow\qquad y = \pm 1 .
+\end{align*}
+Consequently, all four stationary points are given by
+\begin{align*}
+\vecval{p}_1 &= (1, 1)^T , \\
+\vecval{p}_2 &= (-1, 1)^T , \\
+\vecval{p}_3 &= (1, -1)^T , \\
+\vecval{p}_4 &= (-1, -1)^T .
+\end{align*}
+\item Next, we calculate the Hessian matrix  
+\begin{equation*}
+\nabla^2 f = H = 
+\begin{pmatrix}
+\cfrac{\partial^2 f}{\partial x^2} & \cfrac{\partial^2 f}{\partial x \partial y} \\
+\cfrac{\partial^2 f}{\partial y \partial x} & \cfrac{\partial^2 f}{\partial y^2}
+\end{pmatrix}
+= \begin{pmatrix}
+	6x & 0 \\
+	0 & -6y
+\end{pmatrix}
+,
+\end{equation*}
+since we need this in order to understand the definiteness.
+\item Now, we proceed to analyze the nature of point $\vecval{p}_1 = (1, 1)^T$. The Hessian and its determinant resolve to
+\begin{align*}
+H & = \nabla^2 f (\vecval{p}_1) = \begin{pmatrix}
+	6 & 0 \\
+	0 & -6
+\end{pmatrix} , \\
+\det{H_1} &= 6 > 0 , \\
+\det{H_2} &= \det{H} = -36 < 0 .
+\end{align*}
+Hence, the Hessian matrix $H$ is indefinite and $\vecval{p}_1$ is a saddle point with value $f(\vecval{p}_1) = f(1, 1) = 0$.
+\item The nature of point $\vecval{p}_2 = (-1, 1)^T$ is based on its Hessian matrix, as well as the determinant, given by
+\begin{align*}
+H & = \nabla^2 f (\vecval{p}_2) = \begin{pmatrix}
+	-6 & 0 \\
+	0 & -6 
+\end{pmatrix} , \\
+\det{H_1} &= -6 < 0, \\
+\det{H_2} &= \det{H} = 36 > 0 .
+\end{align*}
+The Hessian matrix $H$ is thus negative definite; the point $\vecval{p}_2$ represents a local maximum with value $f(\vecval{p}_2) = f(-1, 1) = 4$.
+\item The nature of point $\vecval{p}_3= (1,-1)^T$ is given by
+\begin{align*}
+H & = \nabla^2 f (\vecval{p}_3) = \begin{pmatrix}
+	6 & 0 \\
+	0 & 6 
+\end{pmatrix} , \\
+\det{H_1} &= 6 > 0 , \\
+\det{H_2} &= \det{H} = 36 > 0 ,
+\end{align*}
+where the Hessian matrix $H$ is positive definite. Accordingly, we obtain a local minimum at $\vecval{p}_3$ with value $f(\vecval{p}_3) = f(1, -1) = -4$.
+\item Similarly, the nature of point $\vecval{p}_4 = (-1,-1)^T$ is
+\begin{align*}
+H & = \nabla f (\vecval{p}_4) = \begin{pmatrix}
+	-6 & 0 \\
+	0 & 6 
+\end{pmatrix} , \\
+\det{H_1} &= -6 < 0 , \\
+\det{H_2} &= \det{H} = -36 < 0 .
+\end{align*}
+The Hessian matrix $H$ is thus indefinite and $\vecval{p}_4$ is a saddle point with value $f(\vecval{p}_4) = f(-1, -1) = 0$. As an alternative approach, we could have also studied the eigenvalues of the Hessian matrix at point $\vecval{p}_4$ via
+\begin{align*}
+& \det(H - \lambda I) = 0 \\
+\Leftrightarrow & \begin{vmatrix}
+-6-\lambda & 0 \\
+0 & 6-\lambda 
+\end{vmatrix} = 0 \\
+\Leftrightarrow & (-6-\lambda)(6-\lambda) &= 0 \\
+\Leftrightarrow & \lambda_1 = -6 \quad\text{and}\quad \lambda_2 = 6 .
+\end{align*}
+Given the above derivation, all eigenvalues satisfy $\lambda_i \neq 0 $ and the Hessian matrix $H$ is thus indefinite.
+\end{enumerate}
+\end{Answer}\fi\makeatother
+
+\begin{Question}{9}
+Consider the function $f(x,y) = \sin{x} \cdot \cos{x}$. First of all, plot the function nicely to get an impression of its curvature. Then, consider the points 
+\begin{equation*}
+\vecval{p}_1 = \begin{bmatrix} \frac{\pi}{2} \\ 0 \end{bmatrix}
+\text{ and }
+\vecval{p}_2 = \begin{bmatrix} 0 \\ \frac{\pi}{2} \end{bmatrix}
+%\vecval{p}_3 = \begin{bmatrix} -\frac{\pi}{2} \\ 0 \end{bmatrix}
+\end{equation*} 
+and check their first and second order optimality conditions using R. What type of stationary points do they belong to?
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{25}
+Plot function in 3D
+<<plot_sin_cos_3d,fig.width=6,fig.height=6,out.width='\\textwidth'>>=
+f <- function(x, y) sin(x)*cos(y)
+x <- seq(-4, 4, 0.1)
+y <- seq(-4, 4, 0.1)
+z <- outer(x, y, f)
+
+persp(x, y, z, theta=45, phi=45)
+
+library(matrixcalc)
+f <- expression(sin(x)*cos(y))
+@
+Check point $\vecval{p}_1$ as follows:
+\begin{itemize}
+\item First order conditions are fulfilled
+<<>>=
+eval(D(f, "x"), list(x=pi/2, y=0))
+@
+\item Second order conditions
+<<>>=
+H <- optimHess(c(pi/2, 0), 
+               function(x) sin(x[1])*cos(x[2]),
+               control=(ndeps=0.0001))
+is.negative.definite(H)
+@
+\item Point $\vecval{p}_1$ is a local maximum
+\end{itemize}
+Check point $\vecval{p}_2$ as follows:
+\begin{itemize}
+\item First order conditions are fulfilled
+<<>>=
+eval(D(f, "x"), list(x=0, y=pi/2))
+@
+\item Second order conditions
+<<>>=
+H <- optimHess(c(0, pi/2), 
+               function(x) sin(x[1])*cos(x[2]),
+               control=(ndeps=0.0001))
+is.indefinite(H)
+@
+\item Point $\vecval{p}_2$ is a saddle point
+\end{itemize}
+%Check point $\vecval{p}_3$ as follows:
+%\begin{itemize}
+%\item First order conditions are fulfilled
+%<<>>=
+%eval(D(f, "x"), list(x=-pi/2, y=0))
+%@
+%\item Second order conditions
+%<<>>=
+%H <- optimHess(c(0, pi/2), 
+               %function(x) sin(x[1])*cos(x[2]),
+               %control=(ndeps=0.0001))
+%is.positive.definite(H)
+%@
+%\item Point $\vecval{p}_3$ is a local minimum
+%\end{itemize}
+\end{Answer}\fi\makeatother
+
+
+%\subsection*{\emph{R} implementation}
+%<<>>=
+%f <- function(x,y) x^3+3*y-y^3-3*x
+%x <- seq(-5,5,len=200)
+%y <- seq(-5,5,len=200)
+%z <- outer(x,y,f)
+%@
+%<<,size='scriptsize',fig.width=8,fig.height=8>>=
+%persp(x,y,z,theta=20,phi=35,ticktype="detailed")
+%@
+%<<>>=
+%fx <- function(x,y,h=0.001) (f(x+h,y)-f(x,y))/h
+%fy <- function(x,y,h=0.001) (f(x,y+h)-f(x,y))/h
+%
+%zfx <- outer(x,y,fx)
+%zfy <- outer(x,y,fy)
+%@
+%<<,size='scriptsize',fig.width=6,fig.height=4>>=
+%image(x,y,z)
+%contour(x,y,z,add=T)
+%@
+%<<eval=TRUE>>=
+%ff <- expression(x^3+3*y-y^3-3*x)
+%Dxx <- D(D(ff, "x"),"x")
+%Dyy <- D(D(ff, "y"),"y")
+%Dxy <- D(D(ff, "x"),"y")
+%Dyx <- D(D(ff, "y"),"x")
+%
+%hessian <- as.data.frame(cbind(c(Dxx,Dxy),c(Dyx,Dyy)))
+%hessian
+%@
+
+\begin{Question}{2}
+Prove that the function $f : \mathbb{R} \rightarrow \mathbb{R}$ with $f(x) = x^2$ is convex.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{8}
+
+A function is convex if
+\begin{equation*}
+f(\alpha x_1 + (1-\alpha) x_2) \leq \alpha f(x_1) + (1-\alpha) f(x_2) \qquad \forall x_1,x_2 \in \mathbb{R} \quad \forall \alpha \in [0,1] .
+\end{equation*}
+This means that every point on a line between $x_1$ and $x_2$ with $x_1 \leq x_2$ lies on or above the function. To prove this, we insert $f(x) = x^2$ and rearrange the above equation as follows
+\begin{align*} 
+\Leftrightarrow & \left( \alpha x_1 + (1-\alpha) x_2 \right)^2 \leq \alpha x_1^2 + (1-\alpha) x_2^2 \\
+\Leftrightarrow & \alpha^2 x_1^2 + 2 \alpha (1-\alpha) x_1 x_2 + (1-\alpha)^2 x_2^2 \leq \alpha x_1^2 + (1-\alpha) x_2^2 \\
+\Leftrightarrow & \alpha^2 x_1^2 + 2 \alpha (1-\alpha) x_1 x_2 + x_2^2 - 2 \alpha x_2^2 + \alpha^2 x_2^2 \leq \alpha x_1^2 + x_2^2 - \alpha x_2^2 \\
+\Leftrightarrow & 0 \geq (\alpha^2-\alpha) x_1^2 + 2 \alpha (1-\alpha) x_1 x_2 + (\alpha^2-\alpha) x_2^2 \\
+\Leftrightarrow & 0 \geq (\alpha^2-\alpha) x_1^2 - 2 (\alpha^2-\alpha) x_1 x_2 + (\alpha^2-\alpha) x_2^2 \\
+\Leftrightarrow & 0 \geq (\alpha^2-\alpha) (x_1-x_2)^2 .
+\end{align*}
+The final inequality is true for all $\alpha \in [0, 1]$ if $x_1=x_2$, as well as $x_1 \neq x_2$.
+\end{Answer}\fi\makeatother
+\end{document}

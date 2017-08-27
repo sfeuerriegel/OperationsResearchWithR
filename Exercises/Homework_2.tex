@@ -1,0 +1,556 @@
+\documentclass
+[answers]
+{exercise_sheet}
+
+\input{../information}
+\input{preamble.tex}
+
+<<setup, include=FALSE>>=
+# change default language to display error messages in English
+Sys.setenv(LANGUAGE = "en")
+
+# smaller font size for chunks
+library(knitr)
+opts_chunk$set(size = "footnotesize", fig.width = 3, fig.height = 3)
+# , highlight=FALSE
+
+listing_source <- function(x, options) {
+    paste("\\parbox{\\textwidth}{",
+      x, "}\n\n", sep = "")
+  }
+listing_output <- function(x, options) {
+    paste("\\parbox{\\textwidth}{",
+      x, "}\n\n", sep = "")
+  }
+  
+# knit_hooks$set(source=listing_source, output=listing_output)
+
+# , inline = function(x, options) x, document = function(x, options) x, chunk = function(x, options) x
+# \\parbox{\\textwidth}{",
+@
+
+\lohead{\CourseTitle: Homework 2}
+
+%% necessary for knitr
+%\documentclass{article}
+%\renewenvironment{alltt}{}{}
+
+\begin{document}
+
+\QuestionBlock{Advanced R}
+  {This homework sheet will test your knowledge of data visualization and advanced programming techniques. Note that this sheet requires the use of for and while loops. This is not the most effective way in R to solve most of these tasks but is intended for learning purposes.}
+
+\subsection*{Visualization}
+
+\begin{Question}{0}
+Store the following snippet as a CSV file.
+
+\vspace*{0.5cm}
+\textbf{File snippet} \verb@persons_header.csv@
+\verbatiminput{data/persons_header.csv}
+\end{Question}
+
+\begin{Question}{2}
+Load the saved CSV file as variable \verb|persons| and display the height on the $x$-axis and the shoe size on the $y$-axis. Name the $y$-axis accordingly.
+
+In the next step, create a line of best fit and plot it using the \verb|abline| function.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{5}
+<<echo=-1>>=
+persons <- read.csv("data/persons_header.csv", header=TRUE, sep=",")
+
+plot(persons$height, persons$shoesize,  type='p', ylab="Age")
+@
+
+<<>>=
+plot(persons$height, persons$shoesize,  type='p', ylab="Age")
+abline(lm(persons$shoesize ~ persons$height))
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{2}
+Recreate the plot given below. Hint: it is a trigonometric function.
+
+<<plot_sin,echo=FALSE>>=
+x <- seq(from = -2*pi,to = 2*pi, by = pi/16)
+plot(x,sin(x),type='l')
+@
+
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+<<echo=TRUE>>=
+<<plot_sin>>
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{5}
+Create a 3-dimensional plot ranging from $-5$ to $5$ for both $x$- and $y$-axis to display the function $f(x,y) = -x^2-y^2$. View at the plot from straight above.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{8}
+<<>>=
+func <- function(x,y) (-x^2 - y^2)
+
+x <- seq(from=-5, to=5, by=0.1)
+y <- seq(from=-5, to=5, by=0.1)
+z <- outer(x, y, func)
+persp(x, y, z, theta=0, phi=90)
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{6}
+Create an colored plot with contours of following function $f(x,y) = (x + 2\cdot y)^3 - x^4$. Both $x$- and $y$-dimension should range from $-10$ to $10$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{8}
+<<>>=
+func <- function(x,y) (x+2*y)^3-x^4
+
+x <- seq(-10,10,0.1)
+y <- seq(-10,10,0.1)
+z <- outer(x,y,func)
+image(x,y,z)
+contour(x,y,z, add=TRUE)
+@
+\end{Answer}\fi\makeatother
+
+\subsection*{Control Flow}
+
+\begin{Question}{1}
+Define a function that takes name and gender as input and prints the form of address, i.\,e. \verb@"Johanna"@ and \verb@"f"@ should print \verb@"Ms. Johanna"@, while \verb@"James"@ and \verb@"m"@ should result into \verb@"Ms. Johanna"@. Think about what would happen with your function if you enter a \verb@NA@ or an empty string \verb@""@ as the gender. 
+
+Hint: use the function \verb|paste| to concatenate two or more individual strings.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{16}
+<<>>=
+address <- function(name,gender) {
+  if (gender == "f") {
+  	salutation <- "Ms. "
+  } else if (gender == "m") {
+    salutation <- "Mr. "
+  }
+  print(paste(salutation, name, sep=""))
+}
+
+address("Sarah", "f")
+address("Johanna", "f")
+address("James", "m")
+
+address("Failure", NA) # error
+address("Wrong result", "") # wrong result
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{6}
+Use a for loop and your function created in the previous task to print the form of address for all persons in the \verb|persons_header.csv| file (see above exercise). Do the same using a while loop.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{10}
+<<>>=
+for (i in 1:nrow(persons)) {
+  address(persons$name[i], persons$gender[i])
+}
+@
+
+<<>>=
+counter <- 1
+while (counter <= nrow(persons)) {
+  address(persons$name[counter], persons$gender[counter])
+  counter <- counter + 1
+}
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{6}
+Print all \textbf{odd} numbers on the screen in the range from 1 to 10 using a for loop. Afterwards, do the same using a while loop.
+
+Hint: you can use the module operator \%\% to see if a number is divisible by another. Examples are as follows:
+<<>>=
+15 %% 4  # 15 is not divisible by 4
+15 %% 3  # 15 is divisible by 3
+15 %% 5  # 15 is divisible by 5
+@
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{15}
+<<>>=
+for (i in c(1:10)) {
+  if(i %% 2 == 1) {
+    print(i)
+  }
+}
+@
+
+<<>>=
+i <- 1
+while (i <= 10) {
+  print(i)
+  i <- i + 2
+}
+
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{4}
+Create a vector containing all integer numbers from $7$ to $50$. Then use a for loop to double every number that is divisible by $7$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{5}
+<<>>=
+numbers <- c(7:50)
+for (i in 1:length(numbers)) {
+  if (numbers[i] %% 7 == 0) {
+    numbers[i] <- numbers[i] * 2
+  }
+}
+
+numbers
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{8}
+Write a function that calculates the factorial of a number. Use a non-recursive function to do so. Calculate $10!$ afterwards. Wha happens if you evaluate your function with input $0$, $-1$, \verb@NA@ or an empty string?
+
+Hint: the factor is defined as $n! = n \cdot (n-1) \cdot \ldots \cdot 2 \cdot 1$. For instance, $5! = 5 \cdot 4 \cdot 3 \cdot 2 \cdot 1 = 120$. By definition, $0! := 1$. 
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{12}
+<<>>=
+factorial <- function(n) {
+  if(n == 0) {
+    return(1)
+  }
+
+  fact <- 1
+  for (i in 1:n) {
+    fact <- fact * i
+  }
+  
+  return(fact)
+}
+
+factorial(5)
+factorial(0)
+factorial(-1) # not defined, i.e. throws wrong result
+factorial(NA) # throws error message
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{2}
+Use the function \verb|factorial| from the previous task to create a function \verb|binom_coeff| that calculates the binomial coefficient for two numbers $n$ and $k$.
+
+What is the number of possibilities in the German Lotto \emph{6 aus 49} given by $\binom{49}{6}$?
+
+Remember: $\binom{n}{k} = \frac{n!}{k!(n-k)!}$
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{4}
+<<>>=
+binom_coeff <- function(n, k) {
+  result <- factorial(n) / (factorial(k) * factorial(n - k))
+  return(result)
+}
+
+binom_coeff(49, 6) # 13,983,816
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{3}
+Write a function \verb|fibonacci| that calculates the $n$-th Fibonacci number. Then calculate the $10$-th Fibonacci number.
+
+Definition: $F_1 = 1$, $F_1 = 1$, $F_n = F_{n-1} + F_{n-2}$. this gives the sequence $1, 1, 2, 3, 5, 8, 13, \ldots$
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{5}
+Non-recursive approach:
+<<>>=
+fibonacci <- c(1, 1)
+for (i in 3:10) {
+  fibonacci[i] <- fibonacci[i-1] + fibonacci[i-2]
+}
+fibonacci[10]
+@
+
+Recursive approach:
+<<>>=
+fibonacci <- function(n) {
+  if (n == 2 || n == 1) {
+    return(1)
+  }
+  return (fibonacci(n-2) + fibonacci(n-1))
+}
+
+fibonacci(10)
+@
+
+\end{Answer}\fi\makeatother
+
+\begin{Question}{2}
+Write a function \verb|digit_sum| that calculates the digit sum of a given input number. A mathematical solution or a string solution can be used. Then calculate the digit sum of 942.
+
+Example: the digits sum of $17311$ is $1 + 7 + 3 + 1 + 1 = 13$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{1}
+<<>>=
+# using string manipulation
+digit_sum <- function(number) {
+  digits <- as.numeric(unlist(strsplit(as.character(number), split="")))
+  return(sum(digits))
+}
+digit_sum(942)
+
+# using maths
+digit_sum <- function(number) {
+  sum <- 0
+  while (number != 0) {
+    sum <- sum + (number %% 10)
+  	number <- floor(number / 10)
+  }
+
+  return(sum)
+}
+
+digit_sum(942)
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{7}
+Create a function \verb|sum_to_n| that takes a positive number $n$ as input and returns the sum from 1 to $n$ using (A)~vector operations and (B)~a for loop. Then create a third variant~(C) that takes the same input and returns the sum from 1 to n using the numeric formula. Test all three variants yield the same results for $n = 10$
+
+Numeric formula: $\sum\limits_{i=1}^n i=\frac{n (n+1)}{2}$
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{20}
+Variant (A)
+<<>>=
+sum_to_n <- function(n) {
+  return(sum(1:n))
+}
+sum_to_n(10)
+@
+Variant (B)
+<<>>=
+sum_to_n <- function(n) {
+  sum <- 0
+  for (i in 1:n) {
+    sum <- sum + i
+  }
+  return(sum)
+}
+sum_to_n(10)
+@
+Variant (C)
+<<>>=
+sum_to_n <- function(n) {
+  return((n*(n+1))/2)
+}
+sum_to_n(10)
+@
+
+\end{Answer}\fi\makeatother
+
+\subsection*{Vector Indexing}
+
+\begin{Question}{5}
+Copy the R code below. Write a for loop to find the index of first \verb|"apple"| element in the vector and print it. Then use another for loop to find all \verb|"apple"| elements in the vector and print their indices.
+
+<<>>=
+fruit_basket <- c("pineapple", "apple", "pear", "orange", "apple", 
+                   "pomegranate", "apple", "apple")
+@
+
+Hint: look up the functionality of the keyword \verb@break@
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{10}
+Find the first index:
+<<>>=
+for (i in 1:length(fruit_basket)) {
+  if (fruit_basket[i] == "apple") {
+    print(i)
+    break
+  }
+}
+@
+
+Find all indices:
+<<>>=
+for (i in 1:length(fruit_basket)) {
+  if (fruit_basket[i] == "apple") {
+    print(i)
+  }
+}
+@
+\end{Answer}\fi\makeatother
+
+\subsection*{Nested Loops}
+
+\begin{Question}{8}
+Copy the R code below. Use two nested for loops to check the array \verb|essay| for misspelling of words using the \verb|dictionary|. Print misspelled words.
+
+<<>>=
+dictionary <- c("brown", "dog", "fox", "jumps",
+                "lazy", "over", "quick", "the")
+essay <- c("the", "quik", "brown", "fox",
+           "jumpps", "over", "the", "lazy","dok")
+@
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{14}
+<<>>=
+for (word in essay) {
+  error <- TRUE
+  for (correct_spelling in dictionary) {
+    if(word == correct_spelling) {
+  	  error <- FALSE
+  	}
+  }
+  if (error) {
+    print(word)
+  }
+}
+@
+
+\end{Answer}\fi\makeatother
+
+\begin{Question}{7}
+Copy the R code below. Write a function \verb|find| that takes a matrix and an element as arguments. The function should return the index of the first occurrence of the element if the matrix contains the element. Use two for loops to realize this function. The matrix should be searched row by row.
+
+<<>>=
+mat <- matrix(c(1,7,3,3,5,1,0,12,4), nrow=3, ncol=3)
+@
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{8}
+<<>>=
+find <- function(mat, element) {
+  for (row in 1:nrow(mat)) {
+    for (col in 1:ncol(mat)) {
+      if (mat[row, col] == element) {
+  	    return(c(row, col))
+  	  }
+    }
+  }
+  return(-1)
+}
+
+find(mat, 12)
+@
+\end{Answer}\fi\makeatother
+
+\begin{Question}{12}
+Print all \textbf{prime} numbers on the screen in the range from 1 to 20 using a for loop. Afterwards, do the same using a while loop. Think about reasons why these algorithms might not be efficient.
+
+Hint: primes are all those numbers above or equal to $2$ that have only $1$ or themselves as a divisor. 
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{25}
+<<>>=
+for (i in c(2:20)) {
+  isPrime <- TRUE
+  for (j in 2:(i-1)) {
+    if (i %% j == 0) {
+      isPrime <- FALSE
+    }
+  }
+  if (isPrime || i == 2) {
+    print(i)
+  }
+}
+
+i <- 2
+while (i <= 20) {
+  isPrime <- TRUE
+  j <- 2
+  while (j <= i-1) {
+    if(i %% j == 0) {
+      isPrime <- FALSE
+    }
+    j <- j + 1
+  }
+  if (isPrime) {
+    print(i)
+  }
+  i <- i + 1
+}
+@
+
+Apparently, the code checks all possible divisors from $1$ to $n$. However, it would be sufficient to test only the range up to $\sqrt{n}$. In addition, the inner loops are executed even a divisior has already been found. 
+\end{Answer}\fi\makeatother
+
+\begin{Question}{6}
+Write a function \verb|gcd| that takes two numbers as input. The function should return the greatest common divisor of those two numbers. Use the euclidean algorithm to find it.
+
+What is the greatest common divisor of $1071$ and $462$?
+
+Hint: you can find details on the Euclidean algorithm in the Wikipedia, see \url{https://en.wikipedia.org/wiki/Euclidean_algorithm}
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{10}
+Recursive approach:
+<<>>=
+gcd <- function(a, b) {
+  if (b == 0) { 
+    return(a)
+  }
+  
+  return(gcd(b, a %% b))
+}
+
+gcd(1071, 462)
+@
+
+Non-recursive approach:
+<<>>=
+gcd <- function(a, b) {
+  while(a != b) {
+    if (a > b) {
+  	  a <- a - b
+  	} else {
+  	  b <- b - a
+  	}
+  }
+  return(a)
+}
+
+gcd(1071, 462)
+@
+\end{Answer}\fi\makeatother
+
+\subsection*{Timing}
+
+\begin{Question}{2}
+Determine whether squaring or calculating the square root is faster in R. Use a vector with inputs from $1$ to $10,000,000$.
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{3}
+<<>>=
+# squares are faster
+system.time((1:10000000)^2)
+system.time(sqrt(1:10000000))
+@
+\end{Answer}\fi\makeatother
+
+\subsection*{Advanced Plotting}
+
+\begin{Question}{2}
+Use the library \verb|ggplot2| to plot heights ($x$-axis) and corresponding shoe sizes ($y$-axis) of the persons in \verb|persons_header.csv|. Use a different symbol to clarify which gender the person belongs to and color them to show their ages.
+
+Hint: Checkout the slides on \emph{ggplot2: An implemenation of the grammar of graphics} by Hadley Wickham at \url{http://ggplot2.org/resources/2007-vanderbilt.pdf}
+\end{Question}
+
+\makeatletter\if@answers\begin{Answer}{1}
+<<ggplot2, fig.width=8, fig.height=3>>=
+library(ggplot2)
+ggplot(persons, 
+       aes(x=persons$height, y=persons$shoesize, shape=persons$gender,
+           color=persons$age)) + 
+  geom_point(size=10)
+@
+\end{Answer}\fi\makeatother
+
+\end{document}
