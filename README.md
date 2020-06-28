@@ -38,6 +38,10 @@ The materials starts with a review of numerical and linear algebra basics for op
 * For lectures, we also provide all questions used in the slides as a [raw file](Lecture/Questions). 
 * The document contains a file ````install_libraries.R``` that automatically installs all packages that are used at one point or the other throughout the course.
 
+## License
+
+"Operations Research with R" by Stefan Feuerriegel is licensed under CC BY-SA 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-sa/4.0
+
 ## Acknowledgments
 
 This course wouldn't have been possible without the intensive help by many of my collaborators, including Julius Gordon and Joscha Märkle-Huß.
